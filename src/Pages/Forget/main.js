@@ -1,11 +1,9 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import Forget from './App.vue'
 import axios from 'axios'
 
 // 引入Mint-UI全部组件
-import Mint from 'mint-ui';
+import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(Mint);
 
@@ -23,8 +21,18 @@ Vue.prototype.$axios = axios
 
 Vue.config.productionTip = false
 
+Vue.directive('preventReClick', {
+  inserted (el, binding) {
+    el.addEventListener('click', () => {
+      if (!el.disabled) {
+        el.disabled = true
+        setTimeout(() => {
+          el.disabled = false
+        }, binding.value || 2000)
+      }
+    })
+  }
+})
 new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+  render: h => h(Forget)
+}).$mount('#forget')
