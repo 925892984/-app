@@ -32,6 +32,7 @@ export default {
   align-content: center;
 	color: #ffffff;
 	margin-top: 5.5rem;
+	overflow-x: hidden;
 }
 .new-item{
 	width: 45%;

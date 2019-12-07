@@ -5,7 +5,7 @@
 				<div class="logo"></div>
 				<form class="serchWrap">
 					<i class="iconfont icon-sousuo"></i>
-					<input type="text" placeholder="请输入搜索内容" class="inputBox" />
+					<input type="text" placeholder="请输入搜索内容" class="inputBox" @click="comeSearch()"/>
 				</form>
 			</div>
 		</header>
@@ -23,12 +23,18 @@
 				</div>
 				<div class="home-menu">
 					<div class="menuWrap">
-						<div class="mentItem">
+						<router-link to="/selectGoods" tag="div" class="mentItem">
 							<div class="item-img">
 								<img src="@/assets/image/01.png" alt class="imgItem" />
 							</div>
 							<p class="menuText">特色美食</p>
-						</div>
+						</router-link>
+						<!-- <div class="mentItem">
+							<div class="item-img">
+								<img src="@/assets/image/01.png" alt class="imgItem" />
+							</div>
+							<p class="menuText">特色美食</p>
+						</div> -->
 						<div class="mentItem">
 							<div class="item-img">
 								<img src="@/assets/image/02.png" alt class="imgItem" />
@@ -73,6 +79,7 @@
 						</div>
 					</div>
 				</div>
+				<router-view name="selectGoods"></router-view>
 				<div class="rule">
 					<img src="@/assets/image/ad01.png" alt="分成规则" />
 				</div>
@@ -96,8 +103,8 @@
 													{{item.goodsPrice}}
 												</span>
 												<div class="separate">
-													<span class="separateText money-symbol">分成</span>
-													<span class="separateNum">￥{{item.goodsFenChengPrice}}</span>
+													<span class="separateText money-symbol">分成￥</span>
+													<span class="separateNum">{{item.goodsFenChengPrice}}</span>
 												</div>
 											</div>
 										</div>
@@ -109,16 +116,21 @@
 						
 					</div>
 				</div>
+				<!-- <hot></hot> -->
 			</div>
+			<router-view></router-view>
 			
 		</div>	
 		<Navbar></Navbar>
+		<router-view name="searchGood" />
+		<!-- <router-view name="detail" /> -->
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll'
-	import Navbar from "@/components/Navbar/index.vue";
+	import Navbar from "@/components/Navbar/index.vue"
+	// import Hot from '@/components/HomeGoods/index.vue'
 	export default {
 		name: "Home",
 		data() {
@@ -132,7 +144,7 @@
 		},
 		components: {
 			Navbar,
-			// isBScroll
+			// Hot
 		},
 		methods: {
 			gethots() {
@@ -181,6 +193,10 @@
 			comeDetail(id){
 				this.$router.push('/details/' + id)
 				// alert('点击')
+			},
+			comeSearch(){
+				window.location.href = '/searchGood'
+				// this.$router.push('/home/searchGood')
 			}
 		},
 		created() {
