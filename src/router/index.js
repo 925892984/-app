@@ -44,6 +44,7 @@ const routes = [
 	},
 	{
 		path: '/searchResult',
+		name: 'Search',
 		component: () => import('@/components/SearchResult'),
 		children: [{
 				path: 'sales',
@@ -60,6 +61,34 @@ const routes = [
 			{
 				path: '/searchResult',
 				redirect: '/searchResult/sales'
+			}
+		]
+	},{
+		path: '/fencheng',
+		component: ()=> import('@/components/FenCheng')
+	},{
+		path: '/set',
+		component: ()=> import('@/components/Set')
+	},
+	{
+		path: '/myOrder',
+		component: ()=> import('@/components/MyOrder'),
+		children: [
+			{
+				path: 'all',
+				component: ()=> import('@/components/MyOrder/index.vue')
+			},
+			{
+				path: 'awaitPay',
+				component: ()=> import('@/components/MyOrder/index.vue')
+			},
+			{
+				path: 'awaitGoods',
+				component: ()=> import('@/components/MyOrder/index.vue')
+			},
+			{
+				path: 'awaitTakeGoods',
+				component: ()=> import('@/components/MyOrder/index.vue')
 			}
 		]
 	},

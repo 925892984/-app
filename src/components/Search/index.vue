@@ -3,11 +3,8 @@
 		<header>
 			<div class="search-wrap">
 				<form action="javascript:return true" class="input-wrap">
-					<input type="search" v-model="content" @keydown="search($event)">
+					<input type="search" placeholder="请输入搜索内容" v-model="content" @keydown="search($event)">
 				</form>
-				<!-- 				<div class="input-wrap">
-					<input type="search" placeholder="请输入搜索内容" v-model="message">
-				</div> -->
 			</div>
 			<div class="cancel" @click.prevent="back()">
 				取消
@@ -42,7 +39,13 @@
 			},
 			search(ev) {
 				if (ev.keyCode == 13) { //键盘回车的编码是13
-					this.$router.push('/searchResult')
+					// this.$router.push('/searchResult')
+					this.$router.push({
+						path: '/searchResult',
+						query: {
+							content: this.content
+						},
+					})
 				}
 			},
 		}

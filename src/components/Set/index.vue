@@ -1,0 +1,368 @@
+<template>
+	<div id="set">
+		<header id="header">
+			<router-link to="/home" class="back-wrap">
+				<i class="iconfont icon-fanhui back"></i>
+			</router-link>
+			<h4 class="title">账户管理</h4>
+		</header>
+		<div class="main">
+			<div class="userMsg-wrap-top">
+				<div class="userMsg-item-wrap" @click="openInputWrap()">
+					<lable class="userMsg-lable">昵称</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">{{userInfo.userNickname}}</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">姓名</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">{{userInfo.userName}}</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">邮箱</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">{{userInfo.userEmail}}</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">修改密码</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">******</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">手机</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">{{userInfo.userPhone}}</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">地址管理</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item"></span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">版本检查</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">当前版本：1.0.0</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">清除缓存</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">131.41MB</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">重置应用</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item">勇敢的小强</span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+
+			</div>
+			<div class="userMsg-wrap-bottom">
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">问题反馈</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item"></span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">关于新店</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item"></span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+				<div class="userMsg-item-wrap">
+					<lable class="userMsg-lable">商家免费入驻</lable>
+					<div class="userMsg-item-right">
+						<span class="nickname userMsg-item"></span>
+						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
+					</div>
+				</div>
+			</div>
+			<div class="outLoginWrap">
+				<button class="outLogin" @click="outLogin()">退出登录</button>
+			</div>
+			<div class="my-popup" v-show="popupVisible" ref="popup">
+				<div class="xd">
+					<h3 class="xd-title">新店</h3>
+					<p class="item-lable">请输入您的昵称</p>
+				</div>
+				
+				<div class="inputWrap">
+					<input type="text" v-model="amend">
+				</div>
+				<div class="btnWrap">
+					<button class="cancel btn">取消</button>
+					<button class="true btn">确认</button>
+				</div>
+			</div>
+			<div class="my-popup-show" v-if="popupVisible" @click.prevent="closePopup()"></div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		name: "Set",
+		data() {
+			return {
+				userInfo: {},
+				popupVisible: false,
+				amend: null
+			};
+		},
+		created() {
+			this.$axios({
+				url: "sms/getUserByUserId",
+				method: "post",
+				data: {
+					userId: window.localStorage.getItem('userId'),
+				},
+				transformRequest: [
+					function(data) {
+						let ret = "";
+						for (let key in data) {
+							ret +=
+								encodeURIComponent(key) +
+								"=" +
+								encodeURIComponent(data[key]) +
+								"&";
+						}
+						return ret;
+					}
+				],
+				headers: {
+					"Authorization": "Bearer " + window.localStorage.getItem('token')
+				}
+			}).then(res => {
+				console.log(res)
+				let data = res.data;
+				if (data.message == "查询成功") {
+					this.userInfo = data.data;
+				}
+			});
+		},
+		methods: {
+			openInputWrap() {
+				this.popupVisible = true
+			},
+			closePopup() {
+				var contentWrap = this.$refs.popup
+				if (contentWrap) {
+					if (!contentWrap.contains(event.target)) {
+						//按钮以外的区域
+						this.popupVisible = false
+					}
+				}
+			},
+			outLogin(){
+				window.localStorage.setItem('token',null)
+				window.localStorage.setItem('userId',null)
+				window.location.href = 'http://localhost:8080/login'
+			}
+		}
+	};
+</script>
+
+<style scoped>
+	#set {
+		width: 100%;
+	}
+
+	header {
+		position: fixed;
+		height: 5rem;
+		background: #f30213;
+		width: 100%;
+		z-index: 1001;
+		top: 0;
+		left: 0;
+	}
+
+	header .back-wrap {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 5rem;
+		width: 5rem;
+		line-height: 5rem;
+		text-align: center;
+		color: #ffffff;
+	}
+
+	header .back {
+		font-size: 2rem;
+		font-weight: 800;
+	}
+
+	header .title {
+		display: inline-block;
+		height: 5rem;
+		width: 100%;
+		line-height: 5rem;
+		text-align: center;
+		font-size: 2rem;
+		color: #ffffff;
+	}
+
+	.main {
+		margin-top: 50px;
+		width: 100%;
+		background-color: #F7EFFF;
+		overflow: hidden;
+	}
+
+	.userMsg-wrap-top {
+		width: 100%;
+		background-color: #ffffff;
+	}
+
+	.userMsg-item-wrap {
+		height: 50px;
+		line-height: 50px;
+		margin-left: 10px;
+		border-bottom: 1px solid #F7EFFF;
+		display: flex;
+	}
+
+	.userMsg-item-wrap .userMsg-lable {
+		width: 200px;
+		font-size: 1.6rem;
+		font-weight: 500;
+	}
+
+	.userMsg-item-wrap .userMsg-item-right {
+		flex: 1;
+		position: relative;
+		font-size: 1.4rem;
+		color: #aaaaaa;
+	}
+
+	.userMsg-item {
+		position: absolute;
+		right: 30px;
+	}
+
+	.userMsg-item-icon {
+		position: absolute;
+		right: 10px;
+	}
+
+	.userMsg-wrap-bottom {
+		margin-top: 30px;
+		width: 100%;
+		background-color: #ffffff;
+	}
+
+	.outLoginWrap {
+		width: 90%;
+		height: 40px;
+		margin: 15px auto;
+	}
+
+	.outLogin {
+		width: 100%;
+		height: 100%;
+		background-color: #F30213;
+		outline: none;
+		border: none;
+		border-radius: 5px;
+		font-size: 1.6rem;
+		font-weight: 500;
+		color: #ffffff;
+	}
+
+	/* 弹出框样式 */
+	.my-popup {
+		width: 80%;
+		height: 25%;
+		border-radius: 5px;
+		position: fixed;
+		background: #fff;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate3d(-50%, -50%, 0);
+		transform: translate3d(-50%, -50%, 0);
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		-webkit-transition: .2s ease-out;
+		transition: .2s ease-out;
+		z-index: 2001;
+	}
+	.my-popup .xd{
+		height: 50px;
+		margin: 20px 0 0 20px;
+	}
+	.xd .xd-title{
+		line-height: 30px;
+		font-size: 1.6rem;
+	}
+	.xd .item-lable{
+		line-height: 20px;
+		font-size: 1.4rem;
+	}
+	.inputWrap{
+		height: 50px;
+		width: 100%;
+		border-bottom: 2px solid #008800;
+		overflow: hidden;
+	}
+	.inputWrap input{
+		width: 100%;
+		height: 100%;
+		outline: none;
+		border: none;
+		font-size: 1.4rem;
+	}
+	.btnWrap{
+		width: 70%;
+		height: 50px;
+		line-height: 50px;
+		margin: 0 auto;
+		position: relative;
+	}
+	.btnWrap .btn{
+		color: #008800;
+		border: none;
+		outline: none;
+		background-color: #ffffff;
+		font-size: 1.4rem;
+	}
+	.btnWrap .cancel{
+		position: absolute;
+		top: 50%;
+		left: 0;
+	}
+	.btnWrap .true{
+		position: absolute;
+		top: 50%;
+		right: 0;
+	}
+	.my-popup-show {
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		opacity: 0.5;
+		background: #000000;
+		z-index: 2000;
+	}
+</style>

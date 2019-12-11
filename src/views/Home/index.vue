@@ -10,7 +10,8 @@
 			</div>
 		</header>
 		<div class="main" ref="wrapper">
-			<div class="content">
+			<loading v-if="isLoading"></loading>
+			<div class="content" v-else>
 				<div class="pullDown">{{message}}</div>
 				<div class="viewpagerWrap">
 					<div class="viewpager container">
@@ -80,7 +81,7 @@
 					</div>
 				</div>
 				<router-view name="selectGoods"></router-view>
-				<div class="rule">
+				<div class="rule" @click="fencheng()">
 					<img src="@/assets/image/ad01.png" alt="分成规则" />
 				</div>
 				<div class="hot">
@@ -123,14 +124,13 @@
 		</div>	
 		<Navbar></Navbar>
 		<router-view name="searchGood" />
-		<!-- <router-view name="detail" /> -->
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll'
 	import Navbar from "@/components/Navbar/index.vue"
-	// import Hot from '@/components/HomeGoods/index.vue'
+	import Loading from '@/components/Loading'
 	export default {
 		name: "Home",
 		data() {
@@ -138,13 +138,13 @@
 				slideList: [],
 				recommendGoods: [],
 				scroll: {},
-				userId: "",
-				message: ''
+				message: '',
+				isLoading: false
 			}
 		},
 		components: {
 			Navbar,
-			// Hot
+			Loading
 		},
 		methods: {
 			gethots() {
@@ -156,7 +156,6 @@
 						flag: "recommend",
 						pageNum: 1,
 						pageSize: 20,
-						userId: this.userId
 					},
 					transformRequest: [
 						function(data) {
@@ -178,25 +177,35 @@
 					let data = res.data;
 					if (data.code == 200) {
 						this.recommendGoods = data.data.list;
+						this.isLoading = false;
 					}
 				});
 			},
 			getslideList() {
 				//获取轮播图
-				this.$axios.get("slide/getIndexSlide").then(res => {
-					let data = res.data;
-					if (data.code == 200) {
-						this.slideList = data.data;
-					}
-				});
+				let images = JSON.parse(window.localStorage.getItem('slideList'))
+				if(images){
+					this.slideList = images
+					this.isLoading = false;
+				}else{
+					this.$axios.get("slide/getIndexSlide").then(res => {
+						let data = res.data;
+						if (data.message == "查询成功") {
+							this.slideList = data.data;
+							window.localStorage.setItem('slideList',JSON.stringify(data.data))
+							this.isLoading = false;
+						}
+					});
+				}		
 			},
 			comeDetail(id){
 				this.$router.push('/details/' + id)
-				// alert('点击')
 			},
 			comeSearch(){
 				window.location.href = '/searchGood'
-				// this.$router.push('/home/searchGood')
+			},
+			fencheng(){
+				window.location.href = '/fencheng'
 			}
 		},
 		created() {

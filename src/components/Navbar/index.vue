@@ -17,7 +17,7 @@
 				<i class="iconfont icon-gouwuchekong"></i>
 				<p class="icon-text">购物车</p>
 			</router-link>
-			<router-link tag="li" class="navbar-item" to="/mine/login" v-if="isLogin">  
+			<router-link tag="li" class="navbar-item" to="/mine" v-if="isLogin">  
 				<i class="iconfont icon-gerenzhongxin"></i>
 				<p class="icon-text">个人中心</p>
 			</router-link>
@@ -36,6 +36,18 @@
 			return {
 				isLogin: false
 			}
+		},
+		created(){
+			if(window.localStorage.getItem('token') == 'null'){
+				this.isLogin = false
+			}else{
+				this.isLogin = true
+			}
+		},
+		methods:{
+// 			isLogin(){
+// 				return this.$store.state.isLogin
+// 			}
 		}
 	}
 </script>

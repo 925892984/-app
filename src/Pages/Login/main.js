@@ -20,6 +20,10 @@ axios.defaults.baseURL = getBaseUrl
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.prototype.$axios = axios
 
+//设置cookie
+import CookieUtil from '@/common/cookie.js'
+Vue.prototype.$cookie = CookieUtil
+
 Vue.config.productionTip = false
 
 new Vue({
