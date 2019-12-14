@@ -25,7 +25,6 @@
 </template>
 
 <script>
-	// import { Popup } from 'mint-ui';
 	export default {
 		name: "searchGood",
 		data() {
@@ -34,20 +33,24 @@
 			};
 		},
 		methods: {
-			back() {
-				this.$router.push('/home')
+			back() {//返回上一个页面，也可使用go(-1)
+				this.$router.back()
 			},
 			search(ev) {
 				if (ev.keyCode == 13) { //键盘回车的编码是13
-					// this.$router.push('/searchResult')
-					this.$router.push({
-						path: '/searchResult',
-						query: {
-							content: this.content
-						},
-					})
+					if(this.content){//如果搜搜词为空不能搜索
+						this.$router.push('/searchResult')
+					}else{
+						return
+					}
+					
 				}
 			},
+		},
+		watch:{
+			content(newVal){
+				this.$store.state.searchMsg = newVal
+			}
 		}
 
 	};

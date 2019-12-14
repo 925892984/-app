@@ -21,12 +21,11 @@
 					url: "goods/searchGoods",
 					method: "post",
 					data: {
-						flag: "homeSearch",
+						flag: "free",
 						pageNum: 1,
 						pageSize: 20,
-						orderType : 'desc',
-						orderField : 'saleNum',
-						other: this.$store.state.searchMsg
+						orderType: 'desc',
+						orderField: 'saleNum'
 					},
 					transformRequest: [
 						function(data) {
@@ -46,10 +45,10 @@
 					}
 				}).then(res => {
 					let data = res.data;
-					if (data.message == "查询成功") {
+					if (data.message == '查询成功') {
 						this.goodList = data.data.list;
 					}
-				});
+				})
 			}
 		},
 		created() {

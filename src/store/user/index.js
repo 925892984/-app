@@ -5,12 +5,20 @@ const user = {
 	namespaced: true,
 	state: {
 		isLogin: false,
-		id: window.localStorage.getItem('userId') || null
+		id: window.localStorage.getItem('userId') || null,
+		tooken: window.localStorage.getItem('token') || null
+	},
+	getters:{
+		getIsLogin(state){
+			if(!window.localStorage.getItem('userId') == 'null'){
+				state.isLogin = true
+			}
+		}
 	},
 	mutations: {
-		//     addCard(state, obj){
-		//         state.cardArr.push(obj);
-		//     }
+// 		 addCard(store, obj){
+// 		   
+// 		}
 	},
 	actions: {
 		//       addCardFun(store, obj){

@@ -32,22 +32,10 @@
 <script>
 	export default {
 		name: 'Navbar',
-		data(){
-			return {
-				isLogin: false
-			}
-		},
-		created(){
-			if(window.localStorage.getItem('token') == 'null'){
-				this.isLogin = false
-			}else{
-				this.isLogin = true
-			}
-		},
 		methods:{
-// 			isLogin(){
-// 				return this.$store.state.isLogin
-// 			}
+			isLogin(){
+				return this.$store.user.getters.getIsLogin
+			}
 		}
 	}
 </script>

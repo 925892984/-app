@@ -4,21 +4,32 @@
 			<a href="http://localhost:8080/home" class="back-wrap">
 				<i class="iconfont icon-fanhui back"></i>
 			</a>
-			<h4 class="title">特色没事</h4>
+			<h4 class="title">{{title}}</h4>
 		</header>
 		<div class="good-sort">
-			<router-link to="/selectGoods/sales" tag="div" class="good-sort-item">销量</router-link>
-			<router-link to="/selectGoods/shared" tag="div" class="good-sort-item">分成</router-link>
-			<router-link to="/selectGoods/price" tag="div" class="good-sort-item">价格</router-link>
+			<router-link to="/homeMenu/sales" tag="div" class="good-sort-item">销量</router-link>
+			<router-link to="/homeMenu/shared" tag="div" class="good-sort-item">分成</router-link>
+			<router-link to="/homeMenu/price" tag="div" class="good-sort-item">价格</router-link>
 		</div>
-		<keep-alive>
-			<router-view></router-view>
-		</keep-alive>
+		<router-view :key="$route.fullPath"></router-view>
 	</div>
 </template>
 <script>
 	export default {
 		name: 'selectGoods',
+		data(){
+			return{
+				title: ''
+			}
+		},
+		methods:{
+			gettitle(){
+				this.title = this.$store.getters.getMenuTitle
+			}
+		},
+		created(){
+			this.gettitle()
+		}
 	}
 </script>
 <style scoped>

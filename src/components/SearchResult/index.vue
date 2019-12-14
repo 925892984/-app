@@ -6,23 +6,20 @@
 			</a>
 			<h4 class="title">搜索结果</h4>
 		</header>
-		<div class="good-sort">
-			<router-link to="/selectGoods/sales" tag="div" class="good-sort-item">销量</router-link>
-			<router-link to="/selectGoods/shared" tag="div" class="good-sort-item">分成</router-link>
-			<router-link to="/selectGoods/price" tag="div" class="good-sort-item">价格</router-link>
-		</div>
-		<keep-alive>
-			<router-view></router-view>
-		</keep-alive>
+		<good-sort></good-sort>
 	</div>
 </template>
 <script>
+	import GoodSort from '@/components/GoodSort/index.vue'
 	export default {
 		name: 'selectGoods',
 		data(){
 			return {
 				goodList: []
 			}
+		},
+		components:{
+			GoodSort
 		},
 		methods:{
 			getgoodList(msg){
@@ -97,27 +94,5 @@
 		text-align: center;
 		font-size: 2rem;
 		color: #ffffff;
-	}
-
-
-	.good-sort {
-		width: 100%;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-	}
-
-	.good-sort-item {
-		width: 30%;
-		height: 30px;
-		line-height: 30px;
-		text-align: center;
-		color: #000000;
-		font-size: 1.6rem;
-		font-weight: 600;
-	}
-
-	.good-sort-item.router-link-active {
-		color: #ce1010;
 	}
 </style>

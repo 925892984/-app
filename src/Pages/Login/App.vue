@@ -69,7 +69,6 @@ export default {
               if(data.message == "登录成功"){
 								window.localStorage.setItem('token',data.data.userInfo.token)
 								window.localStorage.setItem('userId',data.data.userInfo.userId)
-								// this.$store.user.state.isLogin = true
                 window.location.href = 'http://localhost:8080/home'
               }
             })

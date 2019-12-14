@@ -1,9 +1,33 @@
 <template>
 	<div id="recommendNew">
 		<div class="good-sort">
-			<router-link to="/new/recommendNew/sales" tag="div" class="good-sort-item">销量</router-link>
-			<router-link to="/new/recommendNew/shared" tag="div" class="good-sort-item">分成</router-link>
-			<router-link to="/new/recommendNew/price" tag="div" class="good-sort-item">价格</router-link>
+			<router-link to="/new/recommendNew/sales" tag="div" class="good-sort-item">
+				<div @click="changeOrder()">
+					销量
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>	
+					</span>
+				</div>	
+			</router-link>
+			<router-link to="/new/recommendNew/shared" tag="div" class="good-sort-item">
+				<div @click="changeOrder()">
+					分成
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>	
+					</span>
+				</div>
+			</router-link>
+			<router-link to="/new/recommendNew/price" tag="div" class="good-sort-item">
+				<div @click="changeOrder()">
+					价格
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>	
+					</span>
+				</div>
+			</router-link>
 		</div>
 		<keep-alive>
 			<router-view></router-view>
@@ -13,6 +37,16 @@
 <script>
 	export default {
 		name: "recommendNew",
+		data(){
+			return {
+				order: true
+			}
+		},
+		methods:{
+			changeOrder(){
+				this.order = !this.order
+			}
+		}
 	};
 </script>
 <style scoped>
@@ -39,5 +73,8 @@
 
 	.good-sort-item.router-link-active {
 		color: #ce1010;
+	}
+	.good-sort-item .iconfont{
+		font-size: 1.0rem;
 	}
 </style>

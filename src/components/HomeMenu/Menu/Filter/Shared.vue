@@ -1,13 +1,13 @@
 <template>
-	<div class="sales">
+	<div class="shared">
 		<good-list :goodList="goodList"></good-list>
 	</div>
 </template>
 <script>
 	import GoodList from '@/components/GoodList'
 	export default {
-		name: 'Sales',
-		data() {
+		name: 'Shared',
+		data(){
 			return {
 				goodList: []
 			}
@@ -16,17 +16,16 @@
 			GoodList
 		},
 		methods: {
-			getSales() {
+			getShared() {
 				this.$axios({
 					url: "goods/searchGoods",
 					method: "post",
 					data: {
-						flag: "homeSearch",
+						flag: "free",
 						pageNum: 1,
 						pageSize: 20,
-						orderType : 'desc',
-						orderField : 'saleNum',
-						other: this.$store.state.searchMsg
+						orderType: 'desc',
+						orderField: 'goodsFenChengPrice'
 					},
 					transformRequest: [
 						function(data) {
@@ -46,14 +45,14 @@
 					}
 				}).then(res => {
 					let data = res.data;
-					if (data.message == "查询成功") {
+					if (data.message == '查询成功') {
 						this.goodList = data.data.list;
 					}
 				});
 			}
 		},
 		created() {
-			this.getSales()
+			this.getShared()
 		}
 	}
 </script>

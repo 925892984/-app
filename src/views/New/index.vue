@@ -5,9 +5,9 @@
       <router-link to="/new/saleHot" class="new-item">热门爆款</router-link>
       <router-link to="/new/recommendNew" class="new-item">上新推荐</router-link>
     </div>
-    <keep-alive>
+    <!-- <keep-alive> -->
       <router-view></router-view>
-    </keep-alive>
+    <!-- </keep-alive> -->
     <Navbar></Navbar>
   </div>
 </template>

@@ -7,6 +7,7 @@ import mineRouter from './Mine'
 import newRouter from './New'
 import shopCarRouter from './ShopCar'
 import detailsRouter from './Detail'
+// import searchRouter from './Search'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,7 @@ const routes = [
 	newRouter,
 	shopCarRouter,
 	detailsRouter,
+	// searchRouter,
 	{
 		path: '/searchGood',
 		component: () => import('@/components/Search')
@@ -44,7 +46,6 @@ const routes = [
 	},
 	{
 		path: '/searchResult',
-		name: 'Search',
 		component: () => import('@/components/SearchResult'),
 		children: [{
 				path: 'sales',
@@ -89,6 +90,26 @@ const routes = [
 			{
 				path: 'awaitTakeGoods',
 				component: ()=> import('@/components/MyOrder/index.vue')
+			}
+		]
+	},{
+		path: '/homeMenu',
+		component: ()=> import('@/components/HomeMenu/Menu'),
+		children: [{
+				path: 'sales',
+				component: () => import('@/components/HomeMenu/Menu/Filter/Sales.vue')
+			},
+			{
+				path: 'price',
+				component: () => import('@/components/HomeMenu/Menu/Filter/Price.vue')
+			},
+			{
+				path: 'shared',
+				component: () => import('@/components/HomeMenu/Menu/Filter/Shared.vue')
+			},
+			{
+				path: '/homeMenu',
+				redirect: '/homeMenu/sales'
 			}
 		]
 	},

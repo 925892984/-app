@@ -5,14 +5,16 @@
 				<div class="logo"></div>
 				<form class="serchWrap">
 					<i class="iconfont icon-sousuo"></i>
-					<input type="text" placeholder="请输入搜索内容" class="inputBox" @click="comeSearch()"/>
+					<input type="text" placeholder="请输入搜索内容" class="inputBox" @click="comeSearch()" />
 				</form>
 			</div>
 		</header>
 		<div class="main" ref="wrapper">
 			<loading v-if="isLoading"></loading>
 			<div class="content" v-else>
-				<div class="pullDown">{{message}}</div>
+				<div class="pullDown" v-if="message">
+					<loading></loading>
+				</div>
 				<div class="viewpagerWrap">
 					<div class="viewpager container">
 						<mt-swipe :auto="4000">
@@ -22,64 +24,7 @@
 						</mt-swipe>
 					</div>
 				</div>
-				<div class="home-menu">
-					<div class="menuWrap">
-						<router-link to="/selectGoods" tag="div" class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/01.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">特色美食</p>
-						</router-link>
-						<!-- <div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/01.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">特色美食</p>
-						</div> -->
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/02.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">居家百货</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/04.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">热门爆款</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/05.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">数码电器</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/03.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">服装穿戴</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/07.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">美妆护肤</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/10.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">免费送</p>
-						</div>
-						<div class="mentItem">
-							<div class="item-img">
-								<img src="@/assets/image/06.png" alt class="imgItem" />
-							</div>
-							<p class="menuText">上新推荐</p>
-						</div>
-					</div>
-				</div>
+				<home-menu></home-menu>
 				<router-view name="selectGoods"></router-view>
 				<div class="rule" @click="fencheng()">
 					<img src="@/assets/image/ad01.png" alt="分成规则" />
@@ -114,14 +59,12 @@
 								<router-view></router-view>
 							</div>
 						</div>
-						
+
 					</div>
 				</div>
-				<!-- <hot></hot> -->
 			</div>
 			<router-view></router-view>
-			
-		</div>	
+		</div>
 		<Navbar></Navbar>
 		<router-view name="searchGood" />
 	</div>
@@ -131,6 +74,7 @@
 	import BScroll from 'better-scroll'
 	import Navbar from "@/components/Navbar/index.vue"
 	import Loading from '@/components/Loading'
+	import HomeMenu from '@/components/HomeMenu'
 	export default {
 		name: "Home",
 		data() {
@@ -138,13 +82,14 @@
 				slideList: [],
 				recommendGoods: [],
 				scroll: {},
-				message: '',
+				message: false,
 				isLoading: false
 			}
 		},
 		components: {
 			Navbar,
-			Loading
+			Loading,
+			HomeMenu
 		},
 		methods: {
 			gethots() {
@@ -175,7 +120,7 @@
 					}
 				}).then(res => {
 					let data = res.data;
-					if (data.code == 200) {
+					if (data.message == "查询成功") {
 						this.recommendGoods = data.data.list;
 						this.isLoading = false;
 					}
@@ -184,28 +129,28 @@
 			getslideList() {
 				//获取轮播图
 				let images = JSON.parse(window.localStorage.getItem('slideList'))
-				if(images){
+				if (images) {
 					this.slideList = images
 					this.isLoading = false;
-				}else{
+				} else {
 					this.$axios.get("slide/getIndexSlide").then(res => {
 						let data = res.data;
 						if (data.message == "查询成功") {
 							this.slideList = data.data;
-							window.localStorage.setItem('slideList',JSON.stringify(data.data))
+							window.localStorage.setItem('slideList', JSON.stringify(data.data))
 							this.isLoading = false;
 						}
 					});
-				}		
+				}
 			},
-			comeDetail(id){
+			comeDetail(id) { //进入商品详情页面
 				this.$router.push('/details/' + id)
 			},
-			comeSearch(){
-				window.location.href = '/searchGood'
+			comeSearch() { //进入搜索页面
+				this.$router.push('/searchGood')
 			},
-			fencheng(){
-				window.location.href = '/fencheng'
+			fencheng() { //进入分成介绍页
+				this.$router.push('/fencheng')
 			}
 		},
 		created() {
@@ -213,19 +158,19 @@
 			this.gethots();
 		},
 		mounted() {
-      this.$nextTick(() => {
-         this.scroll = new BScroll(this.$refs.wrapper, {
+			this.$nextTick(() => {
+				this.scroll = new BScroll(this.$refs.wrapper, {
 					tap: true,
 					probeType: 1,
 					click: true
 				});
-				this.scroll.on('scroll',(pos)=>{
-					if(pos.y>30){
-						this.message = '正在更新'
+				this.scroll.on('scroll', (pos) => {
+					if (pos.y > 30) {
+						this.message = true
 					}
 				})
-				this.scroll.on('touchEnd',(pos)=>{
-					if(pos.y>30){
+				this.scroll.on('touchEnd', (pos) => {
+					if (pos.y > 30) {
 						this.$axios({
 							url: "goods/searchGoods",
 							method: "post",
@@ -255,16 +200,16 @@
 							let data = res.data;
 							if (data.code == 200) {
 								this.recommendGoods = data.data.list;
-								this.message = "更新成功"
-								setTimeout(()=>{
+								this.message = false
+								setTimeout(() => {
 									this.recommendGoods = data.data.list;
-									this.message = ''
-								},1000)
+									this.message = false
+								}, 1000)
 							}
 						});
 					}
 				})
-      })
+			})
 		}
 	}
 </script>

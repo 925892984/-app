@@ -21,11 +21,12 @@
 					url: "goods/searchGoods",
 					method: "post",
 					data: {
-						flag: "recommendNew",
+						flag: "homeSearch",
 						pageNum: 1,
 						pageSize: 20,
-						orderType: 'desc',
-						orderField: 'goodsFenChengPrice'
+						orderType : 'desc',
+						orderField : 'goodsFenChengPrice',
+						other: this.$store.state.searchMsg
 					},
 					transformRequest: [
 						function(data) {

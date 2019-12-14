@@ -7,28 +7,31 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		isLogin: false,
-		user: {},
-		goodList: []
+		goodList: [],
+		searchMsg: '',
+		menuTitle: '',
+		order: false
 	},
 	getters: {
-		getUser(state) {
-			return state.user
-		},
 		getGoodList(state) {
 			return state.goodList
+		},
+		getMenuTitle(state) {
+			return state.menuTitle
 		}
 	},
 	mutations: {
-		setUser(state, data) {
-			state.user = data
-		},
 		setGoodList(state, data) {
 			state.goodList = data
+		},
+		setMenuTitle(state, str) {
+			state.menuTitle = str
 		}
 	},
 	actions: {
-		
+		setMenuTitleFun(store,str){
+			store.commit('setMenuTitle',str)
+		}
 	},
 	modules: {
 		user

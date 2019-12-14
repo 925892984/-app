@@ -16,10 +16,16 @@
 			</div>
 			<!-- <div class="detail-info"> -->
 			<div class="detail-info">
-				<div class="price">
-					售价：
-					<i class="money-symbol">￥</i>
-					<span class="money-num">{{detail.goodsPrice}}</span>
+				<div class="price-sales">
+					<div class="price">
+						售价：
+						<span class="money-symbol">￥</span>
+						<span class="money-num">{{detail.goodsPrice}}</span>
+					</div>
+					<div class="sales">
+						销量：
+						<span class="money-num">{{detail.saleNum}}</span>
+					</div>
 				</div>
 				<div class="title">
 					购物不剁手 全民享分成
@@ -29,26 +35,47 @@
 					<span class="redNew">新品</span>
 					{{detail.goodsTitle}}
 				</div>
-				<div class="express">快递： 运费{{detail.transportPrice}}</div>
+				<div class="express">快递: <span class="money-symbol">￥</span>{{detail.transportPrice}}</div>
 				<div class="guarantee">保障 正品保证，高额分成</div>
 				<!-- </div> -->
 			</div>
-			<div class="parameter" @click="openParameter()">
+			<!-- <div class="parameter" @click="openParameter()">
 				参数 {{detail.goodsDetail}}
 			</div>
 			<div class="my-popup" v-show="popupVisible" ref="popup">
 				<p class="parameter-title">产品参数</p>
 				<div class="parameter-content">产品参数产品参数产品参数产品参数产品参数</div>
 			</div>
-			<div class="my-popup-show" v-if="popupVisible" @click.prevent="closePopup()"></div>
-			<div class="detail-detail">
+			<div class="my-popup-show" v-if="popupVisible" @click.prevent="closePopup()"></div> -->
+			<!-- 			<div class="detail-detail">
 				<div class="detail-title">
+					<p class="detail-title-text">详情</p>
 					<p class="detail-title-text">详情</p>
 				</div>
 				<div class="goodsImg-wrap">
-					<!-- <p class="good-introduce"></p> -->
 					<img alt="" v-for="(item,index) in goodsDetailImg" :key="index" :src="item">
 				</div>
+			</div> -->
+			<div class="detail-evaluate">
+				<div class="tab">
+					<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/detail'" class="good-detail tab-item">
+						<span>详情</span>
+					</router-link>
+					<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/evaluate'" class="good-evaluate tab-item" @click="changeTab()">
+						<span>评价</span>
+					</router-link>
+				</div>
+				<!-- <mt-tab-container v-model="active">
+					<mt-tab-container-item id="tab-container1">
+						<div ref="goodsDetail"></div>
+					</mt-tab-container-item>
+					<mt-tab-container-item id="tab-container2">
+						
+					</mt-tab-container-item>
+				</mt-tab-container> -->
+				<keep-alive>
+					<router-view></router-view>
+				</keep-alive>
 			</div>
 		</div>
 		<footer class="footer">
@@ -75,15 +102,14 @@
 </template>
 
 <script>
-	// import { Popup } from 'mint-ui';
 	export default {
 		name: "Details",
 		data() {
 			return {
 				detail: {},
+				goodsDetail: '',
 				popupVisible: false,
 				goodsDetailImg: [],
-				goodsImg: []
 			};
 		},
 		methods: {
@@ -98,11 +124,14 @@
 						this.popupVisible = false
 					}
 				}
+			},
+			changeTab(){
+				
 			}
 		},
 		created() {
 			this.$axios({
-				url: "/goods/selectGoodsDetail",
+				url: "goods/selectGoodsDetail",
 				method: "post",
 				data: {
 					goodsId: this.$route.params.detail_id,
@@ -125,32 +154,28 @@
 					"Content-Type": "application/x-www-form-urlencoded"
 				}
 			}).then(res => {
-				console.log(res);
 				let data = res.data;
-				console.log(data.data.goodsDetailImg)
 				if (data.message == "查询成功") {
-					this.detail = data.data;
+					this.detail = data.data
 					this.goodsDetailImg = data.data.goodsDetailImg.split(",")
-					this.goodsImg = data.data.goodsImg.split(",")
+					this.goodsDetail = data.data.goodsDetail.goodsDetail;
+					// this.$refs.goodsDetail.innerHTML = data.data.goodsDetail.goodsDetail;
 				}
 			});
-		},
-		mounted() {
-
 		}
-
 	};
 </script>
 
 <style scoped>
 	#details {
 		width: 100%;
-		overflow: hidden;
 		background: #f7Efff;
 	}
 
 	header {
 		position: fixed;
+		top: 0;
+		left: 0;
 		height: 5rem;
 		background: #f30213;
 		width: 100%;
@@ -184,9 +209,9 @@
 	}
 
 	.main {
-		padding-top: 5rem;
+		margin: 50px 0;
 		width: 100%;
-		position: relative;
+		overflow: hidden;
 		font-size: 1.3rem;
 		font-weight: 500;
 		color: #000000;
@@ -198,7 +223,7 @@
 		overflow: hidden;
 	}
 
-	.img-wrap .image-item{
+	.img-wrap .image-item {
 		width: 100%;
 		height: 100%;
 	}
@@ -208,17 +233,30 @@
 		background-color: #ffffff;
 	}
 
-	.detail-info .price,
+	.detail-info .price-sales,
 	.title,
 	.detail-name,
 	.express,
 	.guarantee {
-		padding-left: 10px;
+		width: 95%;
+		margin: 0 auto;
 	}
 
-	.detail-info .price {
+	.detail-info .price-sales {
 		height: 40px;
 		line-height: 40px;
+		position: relative;
+	}
+
+	.price-sales .price {
+		display: inline-block;
+	}
+
+	.price-sales .sales {
+		display: inline-block;
+		position: absolute;
+		right: 10px;
+		top: 0;
 	}
 
 	.money-symbol {
@@ -249,10 +287,18 @@
 		color: #000000;
 	}
 
-	.detail-name {
+	.express,
+	.guarantee {
 		height: 40px;
 		line-height: 40px;
+		border-bottom: 1px solid #f7Efff;
+	}
+
+	.detail-name {
+		margin-top: 10px;
+		line-height: 25px;
 		font-size: 1.6rem;
+		border-bottom: 1px solid #f7Efff;
 	}
 
 	.detail-name .redNew {
@@ -262,18 +308,6 @@
 		padding: 2px 4px;
 		color: #ffffff;
 		font-size: 1rem;
-	}
-
-	.express,
-	.guarantee {
-		height: 40px;
-		line-height: 40px;
-		border-bottom: 1px solid #f7Efff;
-	}
-
-	.express {
-		margin-top: 30px;
-		border-top: 1px solid #eeeeee;
 	}
 
 	.parameter {
@@ -321,7 +355,7 @@
 		background: #000000;
 		z-index: 2000;
 	}
-
+	
 	.detail-detail {
 		margin-top: 30px;
 		margin-bottom: 100px;
@@ -329,7 +363,7 @@
 		width: 100%;
 	}
 
-	.detail-title {
+	/* .detail-title {
 		height: 40px;
 		line-height: 40px;
 		text-align: center;
@@ -341,6 +375,38 @@
 		display: inline-block;
 		height: 40px;
 		width: 40px;
+		border-bottom: 3px solid #0074D9;
+	} */
+
+	.detail-evaluate {
+		
+	}
+	.detail-evaluate .tab{
+		position: relative;
+		width: 130px;
+		margin: 0 auto;
+		height: 40px;
+		line-height: 40px;
+		
+		border-bottom: 1px solid #f7Efff;
+	}
+	.tab .tab-item{
+		display: inline-block;
+		position: absolute;
+		height: 40px;
+		width: 40px;
+		
+		text-align: center;
+	}
+	
+	.good-detail{
+		left: 0;
+	}
+	.good-evaluate{
+		right: 0;
+	}
+	.good-evaluate.router-link-active,.good-detail.router-link-active{
+		color: #0074D9;
 		border-bottom: 3px solid #0074D9;
 	}
 
@@ -411,12 +477,14 @@
 		flex: 1;
 		background-color: red;
 	}
-	.goodsImg-wrap{
+
+	.goodsImg-wrap {
 		padding: 10px 10px 30px 10px;
 		display: flex;
 		flex-wrap: wrap;
 	}
-	.goodsImg-wrap img{
+
+	.goodsImg-wrap img {
 		width: 100%;
 		height: 300px;
 	}

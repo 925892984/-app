@@ -1,35 +1,112 @@
 <template>
 	<div id="saleHot">
 		<div class="good-sort">
-			<router-link to="/new/saleHot/sales" tag="div" class="good-sort-item">销量</router-link>
-			<router-link to="/new/saleHot/shared" tag="div" class="good-sort-item">分成</router-link>
-			<router-link to="/new/saleHot/price" tag="div" class="good-sort-item">价格</router-link>
+			<router-link to="/new/saleHot/sales" tag="div" class="good-sort-item">
+				<div @click="()=>{order=!order}">
+					销量
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>
+					</span>
+				</div>
+			</router-link>
+			<router-link to="/new/saleHot/shared" tag="div" class="good-sort-item">
+				<div @click="()=>{order=!order}">
+					分成
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>
+					</span>
+				</div>
+			</router-link>
+			<router-link to="/new/saleHot/price" tag="div" class="good-sort-item">
+				<div @click="()=>{order=!order}">
+					价格
+					<span class="icon">
+						<i class="iconfont icon-jiangxu" v-show="order"></i>
+						<i class="iconfont icon-shengxu" v-show="!order"></i>
+					</span>
+				</div>
+			</router-link>
 		</div>
-		<!-- <good-list></good-list> -->
 		<keep-alive>
-			<router-view></router-view>
+			<router-view :key="$route.fullPath"></router-view>
 		</keep-alive>
 	</div>
 </template>
 <script>
-	// import GoodList from '@/components/GoodList'
 	export default {
 		name: "SaleHot",
 		data() {
 			return {
-
+				order: this.$store.state.order,
+				active: {},
+				
 			}
 		},
-		components: {
-			// GoodList
+		methods: {
+			changeOrder() {
+				// 				let icon = document.querySelectorAll('.icon')
+				// 				icon.className = 'iconfont icon-shengxu icon'
+				// 				console.log(icon)
+			},
+			showIcon() {
+// 				let item = document.querySelectorAll('.good-sort-item')
+// 				let active = document.querySelectorAll('.router-link-active')
+// 				let node = ''
+// 				for (let currentValue of item) {
+// 					for (let value of active) {
+// 						if (currentValue == value) {
+// 							node = currentValue
+// 						}
+// 					}
+// 				}
+// 				let span = document.createElement('span')
+// 				let i = document.createElement('i')
+// 				i.className = 'iconfont icon-jiangxu icon'
+// 				span.appendChild(i)
+// 				node.children[0].appendChild(span)
+
+				let icon = document.querySelectorAll('.icon')
+				let list = []
+				for (let item of icon) {
+					// console.log(item)
+					console.log(item.parentNode.parentNode.className)
+					if(item.parentNode.parentNode.className !== 'good-sort-item router-link-exact-active router-link-active'){
+						list.push(item)
+					}else{
+						this.active = item
+					}
+				}
+				for (let item of list) {
+					item.style.display = 'none'
+				}
+				this.active.style.display = 'inline-block'	
+			}
+		},
+		mounted() {
+						this.$nextTick(()=>{
+							this.showIcon()
+						})	
+		},
+		updated() {
+			// this.$router.go(0)
+		},
+		watch:{
+			active(newVal){
+				newVal.style.display = 'inline-block'
+				console.log(newVal)
+			}
 		}
+
 	};
 </script>
 <style scoped>
 	#saleHot {
 		width: 100%;
 	}
-.good-sort {
+
+	.good-sort {
 		width: 100%;
 		display: flex;
 		justify-content: space-around;
@@ -49,6 +126,7 @@
 	.good-sort-item.router-link-active {
 		color: #ce1010;
 	}
+
 	/* .filter {
   width: 100%;
   display: flex;

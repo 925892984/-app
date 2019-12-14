@@ -83,6 +83,20 @@
       "unicode_decimal": 59037
     },
     {
+      "icon_id": "1586153",
+      "name": "降序",
+      "font_class": "jiangxu",
+      "unicode": "e6a1",
+      "unicode_decimal": 59041
+    },
+    {
+      "icon_id": "1586154",
+      "name": "升序",
+      "font_class": "shengxu",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
       "icon_id": "1638292",
       "name": "收藏",
       "font_class": "shoucang",

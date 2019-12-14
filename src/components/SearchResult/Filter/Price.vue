@@ -21,11 +21,12 @@
 					url: "goods/searchGoods",
 					method: "post",
 					data: {
-						flag: "recommendNew",
+						flag: "homeSearch",
 						pageNum: 1,
 						pageSize: 20,
-						orderType: 'desc',
-						orderField: 'goodsPrice'
+						orderType : 'desc',
+						orderField : 'goodsPrice',
+						other: this.$store.state.searchMsg
 					},
 					transformRequest: [
 						function(data) {
@@ -53,7 +54,8 @@
 		},
 		created() {
 			this.getPrice()
-		}
+		},
+
 	}
 </script>
 <style scoped>

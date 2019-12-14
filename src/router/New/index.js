@@ -47,35 +47,5 @@ export default {
 				path: '/new',
 				redirect: '/new/saleHot/sales'
 			}
-		],
-// 	childern: [{
-// 			path: 'saleHot/sales',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: 'saleHot/price',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: 'saleHot/shared',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: 'recommendNew/sales',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: 'saleHot/price',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: 'saleHot/shared',
-// 			component: () => import('@/components/News/SaleHot')
-// 		},
-// 		{
-// 			path: '/new',
-// 			redirect: '/new/saleHot/sales'
-// 		}
-// 	]
-	
+		]
 }
