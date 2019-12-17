@@ -53,20 +53,27 @@
 				node.style.width = currentWidth + 'px'
 			},
 			setProgressBar(){//设置进度条
-				let nodes = document.querySelectorAll('.fill')
-				let arrNodes = Object.values(nodes) //[div,div,div,div,div]
-				// let arrEvaluate = Object.values(this.evaluate)
+				let score =	document.querySelectorAll('.score')
+				let fills = document.querySelectorAll('.fill')
+				let arrScore = Object.values(score)
+				let arrNodes = Object.values(fills) //将对象转换成数组
+				console.log(arrScore)
 				arrNodes.forEach((item,index)=>{
 					if(index == 0){
 						this.info(item,this.evaluate.HighlyRecommended)
+						arrScore[0].innerText = this.evaluate.HighlyRecommended + '%'
 					}else if(index == 1){
 						this.info(item,this.evaluate.VerySatisfied)
+						arrScore[1].innerText = this.evaluate.VerySatisfied + '%'
 					}else if(index == 2){
 						this.info(item,this.evaluate.ValueMoney)
+						arrScore[2].innerText = this.evaluate.ValueMoney + '%'
 					}else if(index == 3){
 						this.info(item,this.evaluate.GeneralFeeling)
+						arrScore[3].innerText = this.evaluate.GeneralFeeling + '%'
 					}else {
 						this.info(item,this.evaluate.JustPassable)
+						arrScore[4].innerText = this.evaluate.JustPassable + '%'
 					}
 				}) 
 			}
@@ -108,7 +115,7 @@
 
 <style scoped>
 	#goods-evaluate {
-		width: 90%;
+		width: 100%;
 		background-color: #ffffff;
 		height: 200px;
 		margin: 15px auto 50px auto;
@@ -116,9 +123,10 @@
 	}
 
 	.item {
-		width: 100%;
+		width: 95%;
 		height: 35px;
 		line-height: 35px;
+		margin: 0 auto;
 		font-size: 1.3rem;
 		font-weight: 600;
 		display: flex;
@@ -134,19 +142,26 @@
 		display: inline-block;
 		height: 10px;
 		margin: auto 0;
-		margin-left: 20px;
-		background: #F7EFFF;
+		margin-left: 15px;
+		margin-right: 20px;
 		border-radius: 5px;
-		position: relative;
+		background: #F7EFFF;
+		line-height: 10px;
+		overflow: hidden;
 	}
-
+	
 	.progress-bar .fill {
-		position: absolute;
-		top: 0;
-		left: 0;
+		display: inline-block;
 		height: 10px;
 		background-image: linear-gradient(-90deg, #29bdd9 0%, #276ace 100%);
 	}
 
-	.progress-bar .score {}
+	.progress-bar .score {
+		display: inline-block;
+		color: #303030;
+		font-weight: 400;
+		font-size: 1.1rem;
+		padding-left: 5px;
+		line-height: 10px;
+	}
 </style>

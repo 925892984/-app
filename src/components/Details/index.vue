@@ -1,9 +1,9 @@
 <template>
 	<div id="details">
 		<header id="header">
-			<router-link to="/home" class="back-wrap">
+			<span @click="()=>{this.$router.back()}" class="back-wrap">
 				<i class="iconfont icon-fanhui back"></i>
-			</router-link>
+			</span>
 			<h4 class="title">详情</h4>
 		</header>
 		<div class="main">
@@ -14,7 +14,6 @@
 					</mt-swipe-item>
 				</mt-swipe>
 			</div>
-			<!-- <div class="detail-info"> -->
 			<div class="detail-info">
 				<div class="price-sales">
 					<div class="price">
@@ -37,25 +36,7 @@
 				</div>
 				<div class="express">快递: <span class="money-symbol">￥</span>{{detail.transportPrice}}</div>
 				<div class="guarantee">保障 正品保证，高额分成</div>
-				<!-- </div> -->
 			</div>
-			<!-- <div class="parameter" @click="openParameter()">
-				参数 {{detail.goodsDetail}}
-			</div>
-			<div class="my-popup" v-show="popupVisible" ref="popup">
-				<p class="parameter-title">产品参数</p>
-				<div class="parameter-content">产品参数产品参数产品参数产品参数产品参数</div>
-			</div>
-			<div class="my-popup-show" v-if="popupVisible" @click.prevent="closePopup()"></div> -->
-			<!-- 			<div class="detail-detail">
-				<div class="detail-title">
-					<p class="detail-title-text">详情</p>
-					<p class="detail-title-text">详情</p>
-				</div>
-				<div class="goodsImg-wrap">
-					<img alt="" v-for="(item,index) in goodsDetailImg" :key="index" :src="item">
-				</div>
-			</div> -->
 			<div class="detail-evaluate">
 				<div class="tab">
 					<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/detail'" class="good-detail tab-item">
@@ -65,14 +46,6 @@
 						<span>评价</span>
 					</router-link>
 				</div>
-				<!-- <mt-tab-container v-model="active">
-					<mt-tab-container-item id="tab-container1">
-						<div ref="goodsDetail"></div>
-					</mt-tab-container-item>
-					<mt-tab-container-item id="tab-container2">
-						
-					</mt-tab-container-item>
-				</mt-tab-container> -->
 				<keep-alive>
 					<router-view></router-view>
 				</keep-alive>
@@ -88,9 +61,13 @@
 					<i class="iconfont icon icon-kefu"></i>
 					<span class="text">客服</span>
 				</div>
-				<div class="collect">
+				<div class="collect" @click.prevent="addCollect()" v-if="!collect">
 					<i class="iconfont icon icon-shoucang"></i>
 					<span class="text">收藏</span>
+				</div>
+				<div class="collect" @click.prevent="closeCollect()" v-else>
+					<i class="iconfont icon icon-yishoucang"></i>
+					<span class="text">已收藏</span>
 				</div>
 			</div>
 			<div class="footer-right">
@@ -108,58 +85,44 @@
 			return {
 				detail: {},
 				goodsDetail: '',
-				popupVisible: false,
 				goodsDetailImg: [],
+				collect: false
 			};
 		},
-		methods: {
-			openParameter() {
-				this.popupVisible = true;
-			},
-			closePopup() {
-				var contentWrap = this.$refs.popup
-				if (contentWrap) {
-					if (!contentWrap.contains(event.target)) {
-						//按钮以外的区域
-						this.popupVisible = false
+		methods:{
+			addCollect(){	//添加收藏
+			let data = {
+				goodsId: this.$route.params.detail_id,
+				userId: window.localStorage.getItem('userId')
+			}
+				this.$http.post("/collection/addCollection",data
+				).then(res => {
+					if (res.message == "添加成功") {
+						this.collect = true
 					}
-				}
+				});
 			},
-			changeTab(){
-				
+			closeCollect(){  //只完成了表面取消收藏，还需改变真实数据
+				this.collect = false
 			}
 		},
 		created() {
-			this.$axios({
-				url: "goods/selectGoodsDetail",
-				method: "post",
-				data: {
-					goodsId: this.$route.params.detail_id,
-					userId: ""
-				},
-				transformRequest: [
-					function(data) {
-						let ret = "";
-						for (let key in data) {
-							ret +=
-								encodeURIComponent(key) +
-								"=" +
-								encodeURIComponent(data[key]) +
-								"&";
-						}
-						return ret;
+			let data = {
+				goodsId: this.$route.params.detail_id,
+				userId: ""	
+			}
+			this.$http.post("goods/selectGoodsDetail",data)
+			.then(res => {
+				console.log(res)
+				if (res.message == "查询成功") {
+					this.detail = res.data
+					this.goodsDetailImg = res.data.goodsDetailImg.split(",")
+					this.goodsDetail = res.data.goodsDetail.goodsDetail;
+					if(res.data.iscollection == 0){  //商品未收藏
+						this.collect = false
+					}else{
+						this.collect = true
 					}
-				],
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				}
-			}).then(res => {
-				let data = res.data;
-				if (data.message == "查询成功") {
-					this.detail = data.data
-					this.goodsDetailImg = data.data.goodsDetailImg.split(",")
-					this.goodsDetail = data.data.goodsDetail.goodsDetail;
-					// this.$refs.goodsDetail.innerHTML = data.data.goodsDetail.goodsDetail;
 				}
 			});
 		}

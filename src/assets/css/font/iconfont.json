@@ -27,6 +27,13 @@
       "unicode_decimal": 58886
     },
     {
+      "icon_id": "351781",
+      "name": "已收藏",
+      "font_class": "yishoucang",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
       "icon_id": "433395",
       "name": "个人中心",
       "font_class": "gerenzhongxin",
@@ -46,6 +53,13 @@
       "font_class": "1",
       "unicode": "e611",
       "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "689296",
+      "name": "添加 加号 无边框",
+      "font_class": "tianjiajiahaowubiankuang",
+      "unicode": "e81a",
+      "unicode_decimal": 59418
     },
     {
       "icon_id": "736502",
@@ -123,6 +137,13 @@
       "font_class": "yuyin",
       "unicode": "e637",
       "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "4734159",
+      "name": "减少",
+      "font_class": "ic_reduce",
+      "unicode": "e614",
+      "unicode_decimal": 58900
     },
     {
       "icon_id": "5302289",

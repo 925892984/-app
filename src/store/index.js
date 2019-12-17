@@ -10,7 +10,8 @@ export default new Vuex.Store({
 		goodList: [],
 		searchMsg: '',
 		menuTitle: '',
-		order: false
+		order: false,
+		tooken: window.localStorage.getItem('token') || null
 	},
 	getters: {
 		getGoodList(state) {

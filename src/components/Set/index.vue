@@ -8,42 +8,42 @@
 		</header>
 		<div class="main">
 			<div class="userMsg-wrap-top">
-				<div class="userMsg-item-wrap" @click="openInputWrap()">
+				<div class="userMsg-item-wrap" @click="openInputWrap($event)">
 					<lable class="userMsg-lable">昵称</lable>
 					<div class="userMsg-item-right">
-						<span class="nickname userMsg-item">{{userInfo.userNickname}}</span>
+						<span class="userMsg-item">{{userInfo.userNickname}}</span>
 						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
 					</div>
 				</div>
-				<div class="userMsg-item-wrap">
+				<div class="userMsg-item-wrap" @click="openInputWrap($event)">
 					<lable class="userMsg-lable">姓名</lable>
 					<div class="userMsg-item-right">
-						<span class="nickname userMsg-item">{{userInfo.userName}}</span>
+						<span class="userMsg-item">{{userInfo.userName}}</span>
 						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
 					</div>
 				</div>
-				<div class="userMsg-item-wrap">
+				<div class="userMsg-item-wrap" @click="openInputWrap($event)">
 					<lable class="userMsg-lable">邮箱</lable>
 					<div class="userMsg-item-right">
-						<span class="nickname userMsg-item">{{userInfo.userEmail}}</span>
+						<span class="userMsg-item">{{userInfo.userEmail}}</span>
 						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
 					</div>
 				</div>
-				<div class="userMsg-item-wrap">
+				<div class="userMsg-item-wrap" @click.prevent="changePassword()">
 					<lable class="userMsg-lable">修改密码</lable>
 					<div class="userMsg-item-right">
-						<span class="nickname userMsg-item">******</span>
+						<span class="userMsg-item">******</span>
 						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
 					</div>
 				</div>
-				<div class="userMsg-item-wrap">
+				<div class="userMsg-item-wrap" @click="openInputWrap($event)">
 					<lable class="userMsg-lable">手机</lable>
 					<div class="userMsg-item-right">
-						<span class="nickname userMsg-item">{{userInfo.userPhone}}</span>
+						<span class="userMsg-item">{{userInfo.userPhone}}</span>
 						<i class="userMsg-item-icon iconfont icon-xiayibu"></i>
 					</div>
 				</div>
-				<div class="userMsg-item-wrap">
+				<div class="userMsg-item-wrap" @click.prevent="intoAddress()">
 					<lable class="userMsg-lable">地址管理</lable>
 					<div class="userMsg-item-right">
 						<span class="nickname userMsg-item"></span>
@@ -102,15 +102,15 @@
 			<div class="my-popup" v-show="popupVisible" ref="popup">
 				<div class="xd">
 					<h3 class="xd-title">新店</h3>
-					<p class="item-lable">请输入您的昵称</p>
+					<p class="item-lable">请输入您的{{label}}</p>
 				</div>
-				
+
 				<div class="inputWrap">
-					<input type="text" v-model="amend">
+					<input type="text" v-model="updateMsg">
 				</div>
 				<div class="btnWrap">
-					<button class="cancel btn">取消</button>
-					<button class="true btn">确认</button>
+					<button class="cancel btn" @click.prevent="cancelPopup()">取消</button>
+					<button class="true btn" @click.prevent="update()">确认</button>
 				</div>
 			</div>
 			<div class="my-popup-show" v-if="popupVisible" @click.prevent="closePopup()"></div>
@@ -125,7 +125,8 @@
 			return {
 				userInfo: {},
 				popupVisible: false,
-				amend: null
+				updateMsg: null,
+				label: ''
 			};
 		},
 		created() {
@@ -160,10 +161,21 @@
 			});
 		},
 		methods: {
-			openInputWrap() {
+			openInputWrap(e) {
+				//作用： 修改this.label的值并显示弹出框
+				//步骤：1、找到点击的是哪一个元素
+				//		2、通过点击的元素找到label元素的值，并将值赋给this.label
+				//		3、this.popupVisible = true打开弹出框
+				if (e.target.className == 'userMsg-lable') { //label标签
+					this.label = e.target.innerText
+				} else if (e.target.className == 'userMsg-item-right') {
+					this.label = e.target.previousSibling.innerText
+				} else {
+					this.label = e.target.parentNode.previousSibling.innerText
+				}
 				this.popupVisible = true
 			},
-			closePopup() {
+			closePopup() { //关闭弹出框
 				var contentWrap = this.$refs.popup
 				if (contentWrap) {
 					if (!contentWrap.contains(event.target)) {
@@ -172,9 +184,146 @@
 					}
 				}
 			},
-			outLogin(){
-				window.localStorage.setItem('token',null)
-				window.localStorage.setItem('userId',null)
+			cancelPopup() { //关闭弹出框
+				this.popupVisible = false
+			},
+			update() { //修改用户信息
+				if (this.label == '昵称') { //修改昵称
+					this.$axios({
+						url: "sms/updateUser ",
+						method: "post",
+						data: {
+							userId: window.localStorage.getItem('userId'),
+							userNickname: this.updateMsg
+						},
+						transformRequest: [
+							function(data) {
+								let ret = "";
+								for (let key in data) {
+									ret +=
+										encodeURIComponent(key) +
+										"=" +
+										encodeURIComponent(data[key]) +
+										"&";
+								}
+								return ret;
+							}
+						],
+						headers: {
+							"Authorization": "Bearer " + window.localStorage.getItem('token')
+						}
+					}).then(res => {
+						let data = res.data;
+						if (data.message == "修改成功") {
+							this.popupVisible = false
+						}
+					});
+				}
+				if (this.label == '姓名') { //修改昵称
+					this.$axios({
+						url: "sms/updateUser ",
+						method: "post",
+						data: {
+							userId: window.localStorage.getItem('userId'),
+							userName: this.updateMsg
+						},
+						transformRequest: [
+							function(data) {
+								let ret = "";
+								for (let key in data) {
+									ret +=
+										encodeURIComponent(key) +
+										"=" +
+										encodeURIComponent(data[key]) +
+										"&";
+								}
+								return ret;
+							}
+						],
+						headers: {
+							"Authorization": "Bearer " + window.localStorage.getItem('token')
+						}
+					}).then(res => {
+						let data = res.data;
+						if (data.message == "修改成功") {
+							this.popupVisible = false
+						}
+					});
+				}
+				if (this.label == '邮箱') { //修改昵称
+					this.$axios({
+						url: "sms/updateUser ",
+						method: "post",
+						data: {
+							userId: window.localStorage.getItem('userId'),
+							userEmail: this.updateMsg
+						},
+						transformRequest: [
+							function(data) {
+								let ret = "";
+								for (let key in data) {
+									ret +=
+										encodeURIComponent(key) +
+										"=" +
+										encodeURIComponent(data[key]) +
+										"&";
+								}
+								return ret;
+							}
+						],
+						headers: {
+							"Authorization": "Bearer " + window.localStorage.getItem('token')
+						}
+					}).then(res => {
+						let data = res.data;
+						if (data.message == "修改成功") {
+							this.popupVisible = false
+						}
+					});
+				}
+				if (this.label == '手机') { //修改昵称
+					this.$axios({
+						url: "sms/updateUser ",
+						method: "post",
+						data: {
+							userId: window.localStorage.getItem('userId'),
+							userPhone: this.updateMsg
+						},
+						transformRequest: [
+							function(data) {
+								let ret = "";
+								for (let key in data) {
+									ret +=
+										encodeURIComponent(key) +
+										"=" +
+										encodeURIComponent(data[key]) +
+										"&";
+								}
+								return ret;
+							}
+						],
+						headers: {
+							"Authorization": "Bearer " + window.localStorage.getItem('token')
+						}
+					}).then(res => {
+						let data = res.data;
+						if (data.message == "修改成功") {
+							this.popupVisible = false
+						}else{
+							alert(data.message)
+						}
+					});
+				}
+			},
+			changePassword(){   //修改密码
+				this.$router.push('/changePassWord')
+			},
+			intoAddress(){   //地址管理
+				this.$router.push('/adminAddress')
+			},
+			outLogin() {
+				window.localStorage.setItem('token', null)
+				window.localStorage.setItem('userId', null)
 				window.location.href = 'http://localhost:8080/login'
 			}
 		}
@@ -306,55 +455,65 @@
 		transition: .2s ease-out;
 		z-index: 2001;
 	}
-	.my-popup .xd{
+
+	.my-popup .xd {
 		height: 50px;
 		margin: 20px 0 0 20px;
 	}
-	.xd .xd-title{
+
+	.xd .xd-title {
 		line-height: 30px;
 		font-size: 1.6rem;
 	}
-	.xd .item-lable{
+
+	.xd .item-lable {
 		line-height: 20px;
 		font-size: 1.4rem;
 	}
-	.inputWrap{
+
+	.inputWrap {
 		height: 50px;
 		width: 100%;
 		border-bottom: 2px solid #008800;
 		overflow: hidden;
 	}
-	.inputWrap input{
+
+	.inputWrap input {
 		width: 100%;
 		height: 100%;
 		outline: none;
 		border: none;
 		font-size: 1.4rem;
 	}
-	.btnWrap{
+
+	.btnWrap {
 		width: 70%;
 		height: 50px;
 		line-height: 50px;
 		margin: 0 auto;
 		position: relative;
 	}
-	.btnWrap .btn{
+
+	.btnWrap .btn {
 		color: #008800;
 		border: none;
 		outline: none;
 		background-color: #ffffff;
 		font-size: 1.4rem;
 	}
-	.btnWrap .cancel{
+
+	.btnWrap .cancel {
 		position: absolute;
 		top: 50%;
 		left: 0;
 	}
-	.btnWrap .true{
+
+	.btnWrap .true {
 		position: absolute;
 		top: 50%;
 		right: 0;
 	}
+
 	.my-popup-show {
 		position: fixed;
 		left: 0;

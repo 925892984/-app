@@ -114,6 +114,16 @@ const routes = [
 		]
 	},
 	{
+		path: '/changePassWord',
+		component: ()=> import('@/components/ChangePSWord')
+	},{
+		path: '/adminAddress',
+		component: ()=> import('@/components/AdminAddress')
+	},{
+		path: '/newAdderss',
+		component: ()=> import('@/components/AdminAddress/newAddress.vue')
+	},
+	{
 		path: '/*',
 		redirect: '/home'
 	}

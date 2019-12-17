@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import http from './JS/http.js'
+import api from './JS/api'
 
 // 引入Mint-UI全部组件
 import Mint from 'mint-ui';
@@ -21,11 +23,27 @@ axios.defaults.baseURL = getBaseUrl
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.prototype.$axios = axios
 
+Vue.prototype.$http = http 
+Vue.prototype.$api = api;
+
 //设置cookie
 import CookieUtil from '@/common/cookie.js'
 Vue.prototype.$cookie = CookieUtil
 
 Vue.config.productionTip = false
+
+Vue.directive('preventReClick', {
+  inserted (el, binding) {
+    el.addEventListener('click', () => {
+      if (!el.disabled) {
+        el.disabled = true
+        setTimeout(() => {
+          el.disabled = false
+        }, binding.value || 2000)
+      }
+    })
+  }
+})
 
 new Vue({
   router,

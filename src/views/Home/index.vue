@@ -10,121 +10,96 @@
 			</div>
 		</header>
 		<div class="main" ref="wrapper">
-			<loading v-if="isLoading"></loading>
-			<div class="content" v-else>
-				<div class="pullDown" v-if="message">
-					<loading></loading>
-				</div>
-				<div class="viewpagerWrap">
-					<div class="viewpager container">
-						<mt-swipe :auto="4000">
-							<mt-swipe-item v-for="item in slideList" :key="item.id">
-								<img :src="item.image" alt="轮播图" class="image-item" />
-							</mt-swipe-item>
-						</mt-swipe>
+			<div class="content">
+				<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" @bottom-status-change="handleBottomChange"
+				@top-status-change="handleTopChange" :bottom-all-loaded="allLoaded" ref="loadmore" :auto-fill='false' :bottomDistance='30'>
+					<div class="viewpagerWrap">
+						<div class="viewpager container">
+							<mt-swipe :auto="4000">
+								<mt-swipe-item v-for="item in slideList" :key="item.id">
+									<img :src="item.image" alt="轮播图" class="image-item" />
+								</mt-swipe-item>
+							</mt-swipe>
+						</div>
 					</div>
-				</div>
-				<home-menu></home-menu>
-				<router-view name="selectGoods"></router-view>
-				<div class="rule" @click="fencheng()">
-					<img src="@/assets/image/ad01.png" alt="分成规则" />
-				</div>
-				<div class="hot">
-					<div class="hotWrap">
-						<p class="hot-title">
-							<img src="@/assets/image/hot.png" alt />
-						</p>
-						<div class="container">
-							<div class="hotShop-wrap">
-								<div class="shop-item" v-for="(item,index) in recommendGoods" :key="index">
-									<router-link :to="'/detail/'+item.goodsId">
-										<div class="shop-img">
-											<img :src="item.goodsImg" alt="商品图片" />
-										</div>
-										<div class="hot-detail">
-											<p class="hotName">{{item.goodsTitle}}</p>
-											<div class="hot-other">
-												<span class="price">
-													<i class="money-symbol">￥</i>
-													{{item.goodsPrice}}
-												</span>
-												<div class="separate">
-													<span class="separateText money-symbol">分成￥</span>
-													<span class="separateNum">{{item.goodsFenChengPrice}}</span>
+					<home-menu></home-menu>
+					<div class="rule" @click="fencheng()">
+						<img src="@/assets/image/ad01.png" alt="分成规则" />
+					</div>
+					<div class="hot">
+						<div class="hotWrap">
+							<p class="hot-title">
+								<img src="@/assets/image/hot.png" alt />
+							</p>
+							<div class="container">
+								<div class="hotShop-wrap">
+									<div class="shop-item" v-for="(item,index) in list" :key="index">
+										<div @click.prevent="comeDetail(item.goodsId)">
+											<div class="shop-img">
+												<img :src="item.goodsImg" alt="商品图片" />
+											</div>
+											<div class="hot-detail">
+												<p class="hotName">{{item.goodsTitle}}</p>
+												<div class="hot-other">
+													<span class="price">
+														<i class="money-symbol">￥</i>
+														{{item.goodsPrice}}
+													</span>
+													<div class="separate">
+														<span class="separateText money-symbol">分成￥</span>
+														<span class="separateNum">{{item.goodsFenChengPrice}}</span>
+													</div>
 												</div>
 											</div>
 										</div>
-									</router-link>
+									</div>
 								</div>
-								<router-view></router-view>
 							</div>
 						</div>
-
 					</div>
-				</div>
+				</mt-loadmore>
 			</div>
 			<router-view></router-view>
 		</div>
 		<Navbar></Navbar>
-		<router-view name="searchGood" />
 	</div>
 </template>
 
 <script>
-	import BScroll from 'better-scroll'
 	import Navbar from "@/components/Navbar/index.vue"
-	import Loading from '@/components/Loading'
 	import HomeMenu from '@/components/HomeMenu'
 	export default {
 		name: "Home",
 		data() {
 			return {
 				slideList: [],
-				recommendGoods: [],
+				list: [],
 				scroll: {},
 				message: false,
-				isLoading: false
+				isLoading: false,
+				allLoaded: false, //false：加载未完成,可以继续加载；true：加载完成，不能继续加载
+				bottomStatus: '',
+				topStatus: '',
+				loading: false,
+				page: 2
 			}
 		},
 		components: {
 			Navbar,
-			Loading,
 			HomeMenu
 		},
 		methods: {
 			gethots() {
 				//获取首页商品推荐
-				this.$axios({
-					url: "goods/searchGoods",
-					method: "post",
-					data: {
-						flag: "recommend",
-						pageNum: 1,
-						pageSize: 20,
-					},
-					transformRequest: [
-						function(data) {
-							let ret = "";
-							for (let key in data) {
-								ret +=
-									encodeURIComponent(key) +
-									"=" +
-									encodeURIComponent(data[key]) +
-									"&";
-							}
-							return ret;
-						}
-					],
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					}
+				this.$http.post('goods/searchGoods', {
+					flag: "recommend",
+					pageNum: 1,
+					pageSize: 20,
 				}).then(res => {
-					let data = res.data;
-					if (data.message == "查询成功") {
-						this.recommendGoods = data.data.list;
-						this.isLoading = false;
+					if (res.message == "查询成功") {
+						this.list = res.data.list;
 					}
-				});
+				})
 			},
 			getslideList() {
 				//获取轮播图
@@ -133,83 +108,77 @@
 					this.slideList = images
 					this.isLoading = false;
 				} else {
-					this.$axios.get("slide/getIndexSlide").then(res => {
-						let data = res.data;
-						if (data.message == "查询成功") {
-							this.slideList = data.data;
-							window.localStorage.setItem('slideList', JSON.stringify(data.data))
+// 					this.$http.get("slide/getIndexSlide").then(res => {
+// 						if (res.message == "查询成功") {
+// 							this.slideList = res.data;
+// 							window.localStorage.setItem('slideList', JSON.stringify(res.data))
+// 							this.isLoading = false;
+// 						}
+	// 					})
+					this.$api.slide()
+					.then(res=>{
+						if (res.message == "查询成功") {
+							this.slideList = res.data;
+							window.localStorage.setItem('slideList', JSON.stringify(res.data))
 							this.isLoading = false;
 						}
-					});
+					})
 				}
 			},
 			comeDetail(id) { //进入商品详情页面
-				this.$router.push('/details/' + id)
+				this.$router.push('/detail/' + id)
 			},
 			comeSearch() { //进入搜索页面
 				this.$router.push('/searchGood')
 			},
 			fencheng() { //进入分成介绍页
 				this.$router.push('/fencheng')
-			}
+			},
+			loadBottom() {  //上拉加载数据
+				this.allLoaded = true;// 若数据已全部获取完毕
+				this.$refs.loadmore.onBottomLoaded();
+				console.log("请求数据了");
+				setTimeout(() => {
+					this.$http.post('goods/searchGoods', {
+						flag: "recommend",
+						pageNum: this.page,
+						pageSize: 20
+					}).then(res => {
+						if (res.message == "查询成功") {
+							// Indicator.close() ;
+							/**
+							 * 将新获取的数据拼接在list上,将page加一，这样在向下滑动时 获取的就是page = page + 1页的数据
+							 * 当res.data.dataList.length = 0 时,说明没有获取到数据，提示(其实这样是多请求了一次,只是获取的数据为空)
+							 * 如果后端可以把每页返回的条数pageCount返回,比如每页返回5条数据
+							 * 那么可以判断获取的数据的res.data.dataList.length < pageCount，说明这次获取的数据不足5条，那么下一页肯定是没有数据的，就不允许再次获取数据了，这样就减少了一次请求
+							 */
+							this.list = [...this.list, ...res.data.list];
+							this.page++;
+							if (res.data.list.length < 20) {
+								this.$toast({
+									message: '没有更多数据了'
+								})
+							}
+						}
+						this.allLoaded = false;
+					}).catch(err => {
+						console.log(err);
+					})
+				}, 100)
+			},
+			loadTop() { //下拉更新数据
+				this.$refs.loadmore.onTopLoaded();
+			},
+			handleBottomChange(status) {
+				this.bottomStatus = status;
+			},
+			handleTopChange(status) {
+				this.topStatus = status;
+			},
 		},
 		created() {
 			this.getslideList();
-			this.gethots();
-		},
-		mounted() {
-			this.$nextTick(() => {
-				this.scroll = new BScroll(this.$refs.wrapper, {
-					tap: true,
-					probeType: 1,
-					click: true
-				});
-				this.scroll.on('scroll', (pos) => {
-					if (pos.y > 30) {
-						this.message = true
-					}
-				})
-				this.scroll.on('touchEnd', (pos) => {
-					if (pos.y > 30) {
-						this.$axios({
-							url: "goods/searchGoods",
-							method: "post",
-							data: {
-								flag: "recommend",
-								pageNum: 1,
-								pageSize: 20,
-								userId: this.userId
-							},
-							transformRequest: [
-								function(data) {
-									let ret = "";
-									for (let key in data) {
-										ret +=
-											encodeURIComponent(key) +
-											"=" +
-											encodeURIComponent(data[key]) +
-											"&";
-									}
-									return ret;
-								}
-							],
-							headers: {
-								"Content-Type": "application/x-www-form-urlencoded"
-							}
-						}).then(res => {
-							let data = res.data;
-							if (data.code == 200) {
-								this.recommendGoods = data.data.list;
-								this.message = false
-								setTimeout(() => {
-									this.recommendGoods = data.data.list;
-									this.message = false
-								}, 1000)
-							}
-						});
-					}
-				})
-			})
+			this.gethots(); //创建页面时先获取page = 1 的数据
 		}
 	}
 </script>
@@ -281,6 +250,9 @@
 		margin-top: 5rem;
 	}
 
+	.main .content{
+		margin-bottom: 50px;
+	}
 	.main .viewpagerWrap {
 		height: 14rem;
 		width: 100%;
