@@ -62,6 +62,7 @@
 			<router-view></router-view>
 		</div>
 		<Navbar></Navbar>
+		<router-view></router-view>
 	</div>
 </template>
 

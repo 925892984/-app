@@ -9,6 +9,7 @@ import pay from './pay'
 import shopcart from './shopcart'
 import user from './user'
 import store from './store'
+import address from './address'
 export default {
 	slide,
 	collection,
@@ -17,5 +18,6 @@ export default {
 	pay,
 	shopcart,
 	user,
-	store
+	store,
+	address
 }

@@ -4,8 +4,38 @@
 			<span class="back-wrap" @click="()=>{this.$router.back()}">
 				<i class="iconfont icon-fanhui back"></i>
 			</span>
-			<h4 class="title">详情</h4>
+			<h4 class="title">地址管理</h4>
 		</header>
+		<div class="main">
+			<div class="address-item" v-for="item in addressList" :key="item.add_id">
+				<div class="address-content">
+					<div class="person">
+						<span class="user-name">{{item.name}}</span>
+						<span class="user-tel">{{item.phone}}</span>
+					</div>
+					<div class="detail-address">
+						<span>{{item.address}}</span>
+					</div>
+				</div>
+				<div class="handle">
+					<div class="handel-left">
+						<input type="radio" class="radio-inp" :data-radio="item.is_default">
+						<span>默认地址</span>
+					</div>
+
+					<div class="handel-right">
+						<div class="edit-address-wrap">
+							<span class="iconfont icon-bianji address-icon"></span>
+							<span class="edit">编辑</span>
+						</div>
+						<div class="delete-address-wrap">
+							<span class="iconfont icon-shanchu address-icon"></span>
+							<span class="delete">删除</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<footer class="footer">
 			<div class="btnWrap" @click.prevent="newAddrss()">
 				<button class="btn add-address">
@@ -17,13 +47,52 @@
 	</div>
 </template>
 
-<script>
+<script scoped>
 	export default {
 		name: 'AdminAddress',
+		data(){
+			return {
+				addressList: []
+			}
+		},
 		methods:{
 			newAddrss(){
 				this.$router.push('/newAdderss')
+			},
+			getAddressList(){//查询收货地址列表
+				let data ={
+					userId: window.localStorage.getItem('userId')
+				}
+				this.$api.address.listaddress(data)
+				.then(res=>{
+					console.log(res)
+					if(res.message == "查询成功"){
+						this.addressList = res.data.result
+						this.addressList.forEach(item=>{
+							if(item.is_default == 1){ //保存默认地址
+								window.localStorage.setItem('address',item.add_id)
+							}
+						})
+					}
+					
+				})
+			},
+			initRadio(){ //初始化默认地址
+				let radios = document.querySelectorAll('.radio-inp')
+				console.log(radios)
+				radios.forEach(item=>{
+					if(item.getAttribute('data-radio') == 1){  //是否为默认地址
+						item.setAttribute('checked','true')
+					}
+					console.log(item.getAttribute('data-radio'))
+				})
 			}
+		},
+		created() {
+			this.getAddressList()
+			this.$nextTick(()=>{
+				this.initRadio()
+			})
 		}
 	}
 </script>
@@ -102,6 +171,78 @@
 	}
 
 	.addIcon {
+		font-size: 1.6rem;
+	}
+	
+	.main{
+		position: fixed;
+		top: 50px;
+		bottom: 50px;
+		left: 0;
+		right: 0;
+		background-color: #F7EFFF;
+		font-size: 1.6rem;
+	}
+	
+	.address-item{
+		margin-bottom: 15px;
+		background-color: #fff;
+		width: 100%;
+	}
+	
+	.address-content{
+		height: 90px;
+		width: 100%;
+		border-bottom: 1px solid #F7EFFF;
+	}
+	.address-content .person{
+		margin-left: 10px;
+		height: 50px;
+		line-height: 50px;
+	}
+	
+	.address-content .detail-address{
+		margin-left: 10px;
+		height: 40px;
+		line-height: 30px;
+		font-size: 1.4rem;
+		font-weight: 200;
+		color: #999999;
+	}
+	
+	.person .user-tel{
+		display: inline-block;
+		margin-left: 10px;
+	}
+	
+	.address-item .handle{
+		height: 40px;
+		line-height: 40px;
+		display: flex;
+		justify-content: space-between;
+		font-size: 1.4rem;
+		font-weight: 400;
+		color: #666666;
+	}
+	.handel-left{
+		flex: 1;
+		margin-left: 10px;
+	}
+	.handel-right{
+		width: 120px;
+		margin-right: 10px;
+		display: flex;
+		justify-content: space-between;
+	}
+	.edit-address-wrap,.delete-address-wrap{
+		width: 50px;
+		font-size: 1.4rem;
+	}
+	.address-icon{
+		font-size: 1.4rem;
+		padding-right: 6px;
+	}
+	.icon-shanchu{
 		font-size: 1.6rem;
 	}
 </style>

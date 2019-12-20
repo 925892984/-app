@@ -118,6 +118,13 @@
       "unicode_decimal": 58899
     },
     {
+      "icon_id": "2134422",
+      "name": "卸载",
+      "font_class": "xiezai",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
+    },
+    {
       "icon_id": "2546217",
       "name": "首页-待发货",
       "font_class": "daifahuo",
@@ -214,6 +221,13 @@
       "font_class": "wodeqianbao1",
       "unicode": "e64e",
       "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "11908036",
+      "name": "编 辑",
+      "font_class": "bianji",
+      "unicode": "e608",
+      "unicode_decimal": 58888
     }
   ]
 }
