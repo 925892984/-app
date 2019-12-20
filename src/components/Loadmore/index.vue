@@ -32,10 +32,7 @@
 		</mt-loadmore>
 	</div>
 </template>
-<script>
-	//局部引入 Indicator 和 loadmore
-	// import { Indicator } from 'mint-ui'; 
-	// import { Loadmore } from 'mint-ui';  
+<script> 
 	export default {
 		name: 'loadmore',
 		data() {

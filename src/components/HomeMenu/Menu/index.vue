@@ -11,7 +11,9 @@
 			<router-link to="/homeMenu/shared" tag="div" class="good-sort-item">分成</router-link>
 			<router-link to="/homeMenu/price" tag="div" class="good-sort-item">价格</router-link>
 		</div>
-		<router-view :key="$route.fullPath"></router-view>
+		<keep-alive>
+			<router-view :key="$route.fullPath"></router-view>
+		</keep-alive>
 	</div>
 </template>
 <script>

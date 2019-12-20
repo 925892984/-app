@@ -1,11 +1,5 @@
 <template>
-	<div id="details">
-<!-- 		<header id="header">
-			<router-link to="/home" class="back-wrap">
-				<i class="iconfont icon-fanhui back"></i>
-			</router-link>
-			<h4 class="title">我的订单</h4>
-		</header> -->
+	<div id="details"
 		<div class="myOrder">
 			<div class="order-menu">
 				<router-link to="/myOrde/all" tag="div" class="order-item">全部</router-link>

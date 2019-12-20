@@ -10,9 +10,9 @@
 			</div>
 		</header>
 		<div class="main" ref="wrapper">
-			<div class="content">
+			<div class="content" style="height:600px;overflow-y:scroll;">
 				<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" @bottom-status-change="handleBottomChange"
-				@top-status-change="handleTopChange" :bottom-all-loaded="allLoaded" ref="loadmore" :auto-fill='false' :bottomDistance='30'>
+				@top-status-change="handleTopChange" :bottom-all-loaded="allLoaded" ref="loadmore" :auto-fill='false' :bottomDistance='0'>
 					<div class="viewpagerWrap">
 						<div class="viewpager container">
 							<mt-swipe :auto="4000">
@@ -91,11 +91,14 @@
 		methods: {
 			gethots() {
 				//获取首页商品推荐
-				this.$http.post('goods/searchGoods', {
+				let data = {
 					flag: "recommend",
 					pageNum: 1,
 					pageSize: 20,
-				}).then(res => {
+				}
+				this.$api.goods.searchGoods(data)
+				.then(res => {
+					// console.log(res)
 					if (res.message == "查询成功") {
 						this.list = res.data.list;
 					}
@@ -108,14 +111,7 @@
 					this.slideList = images
 					this.isLoading = false;
 				} else {
-// 					this.$http.get("slide/getIndexSlide").then(res => {
-// 						if (res.message == "查询成功") {
-// 							this.slideList = res.data;
-// 							window.localStorage.setItem('slideList', JSON.stringify(res.data))
-// 							this.isLoading = false;
-// 						}
-	// 					})
-					this.$api.slide()
+					this.$api.slide.slideImg()
 					.then(res=>{
 						if (res.message == "查询成功") {
 							this.slideList = res.data;
@@ -139,11 +135,12 @@
 				this.$refs.loadmore.onBottomLoaded();
 				console.log("请求数据了");
 				setTimeout(() => {
-					this.$http.post('goods/searchGoods', {
+					let data = {
 						flag: "recommend",
 						pageNum: this.page,
 						pageSize: 20
-					}).then(res => {
+					}
+					this.$api.goods.searchGoods(data).then(res => {
 						if (res.message == "查询成功") {
 							// Indicator.close() ;
 							/**

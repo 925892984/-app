@@ -45,69 +45,26 @@
 				});
 			},
 			getmsg() {
-				this.$axios({ //根据父id查询二级类目
-						url: '/goods/goodsMenu',
-						method: 'post',
-						data: {
-							pageNum: 1,
-							pageSize: 20,
-							pid: this.$route.params.pid
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Content-Type": "application/x-www-form-urlencoded"
-						}
-					})
-					.then(res => {
-						let data = res.data
-						if (data.message == "查询成功") {
-							this.menuListItem = data.data
-							// this.menuGoods = data.data.goods.list
-						}
-					}),
-					this.$axios({ //通过pid查询类目下的商品
-						url: 'goods/getGoods',
-						method: 'post',
-						data: {
-							pageNum: 1,
-							pageSize: 20,
-							pid: this.$route.params.pid
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Content-Type": "application/x-www-form-urlencoded"
-						}
-					})
-					.then(res => {
-						let data = res.data
-						if (data.message == "查询成功") {
-							this.menuGoods = data.data.goods.list
-						}
-					})
+				let data = {
+					pageNum: 1,
+					pageSize: 20,
+					pid: this.$route.params.pid
+				}
+				this.$api.goods.goodsMenu(data).then(res => {
+					if (res.message == "查询成功") {
+						this.menuListItem = res.data
+					}
+				})
+				let msg = {
+					pageNum: 1,
+					pageSize: 20,
+					pid: this.$route.params.pid
+				}
+				this.$api.goods.getGoods(msg).then(res => { //通过pid查询类目下的商品
+					if (res.message == "查询成功") {
+						this.menuGoods = res.data.goods.list
+					}
+				})
 			}
 		},
 		created() {

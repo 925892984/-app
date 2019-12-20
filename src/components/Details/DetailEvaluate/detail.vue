@@ -3,36 +3,16 @@
 </template>
 
 <script>
-	export default{
+	export default {
 		name: 'GoodsDetail',
 		created() {
-			this.$axios({
-				url: "goods/selectGoodsDetail",
-				method: "post",
-				data: {
-					goodsId: this.$route.params.detail_id,
-					userId: ""
-				},
-				transformRequest: [
-					function(data) {
-						let ret = "";
-						for (let key in data) {
-							ret +=
-								encodeURIComponent(key) +
-								"=" +
-								encodeURIComponent(data[key]) +
-								"&";
-						}
-						return ret;
-					}
-				],
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				}
-			}).then(res => {
-				let data = res.data;
-				if (data.message == "查询成功") {
-					this.$refs.goodsDetail.innerHTML = data.data.goodsDetail.goodsDetail;
+			var data = {
+				goodsId: this.$route.params.detail_id,
+				userId: ""
+			}
+			this.$api.goods.selectGoodsDetail(data).then(res => {
+				if (res.message == "查询成功") {
+					this.$refs.goodsDetail.innerHTML = res.data.goodsDetail.goodsDetail;
 				}
 			});
 		}

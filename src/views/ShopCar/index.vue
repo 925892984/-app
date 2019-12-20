@@ -2,29 +2,29 @@
 	<div id="shop-car">
 		<Header title="购物车"></Header>
 		<div class="main">
-			<div class="shop-car-item">
+			<div class="shop-car-item" v-for="item in shopCarList" :key="item.merchantId">
 				<div class="storeWrap">
-					<input type="checkbox" id="store-checkbox" name="store" value="阿汤哥的店" class="store-checkbox" />
-					<label for="store-checkbox" class="checkbox-label"></label>
-					<span class="store-name">阿汤哥的店</span>
+					<input type="checkbox" :id="item.merchantId" name="" value="" class="store-checkbox" />
+					<label :for="item.merchantId" class="checkbox-label"></label>
+					<span class="store-name">{{item.merchant_business_name}}</span>
 				</div>
-				<div class="goodWrap">
-					<input type="checkbox" id="good-checkbox" name="good" value="阿汤哥的店" class="good-checkbox" />
-					<label for="good-checkbox" class="checkbox-label"></label>
+				<div class="goodWrap"  v-for="good in item.item" :key="good.id">
+					<input type="checkbox" :id="good.id" name="" value="" class="good-checkbox" />
+					<label :for="good.id" class="checkbox-label"></label>
 					<div class="good-item">
 						<div class="goodImg">
-							<img src="@/assets/logo.png" alt="">
+							<img :src="good.goodsImg" alt="">
 						</div>
 						<div class="goodDetails">
 							<div class="good-name">
-								<span>考研数学二</span>
+								<span>{{good.goodsTitle}}</span>
 							</div>
-							<div class="good-price">￥0.01</div>
+							<div class="good-price">￥{{good.goodsPrice}}</div>
 						</div>
 						<div class="shop-car-num">
 							<div class="but-wrap">
 								<button class="minus btn">-</button>
-								<button class="good-num btn">1</button>
+								<button class="good-num btn">{{good.goodsNum}}</button>
 								<button class="add btn">+</button>
 							</div>
 						</div>
@@ -44,7 +44,7 @@
 		data() {
 			return {
 				value: '',
-				goodList: []
+				shopCarList: []
 			}
 		},
 		components: {
@@ -56,40 +56,18 @@
 				if(window.localStorage.getItem('token') == 'null'){
 					window.location.href = 'http://localhost:8080/login'
 				}
-// 				if(!this.$store.user.state.isLogin){
-// 					window.location.href = 'http://localhost:8080/login'
-// 				}
 			},
 			getShopCar(){
-				this.$axios({
-					url: "shopCart/findShopCart",
-					method: "post",
-					data: {
-						userId: window.localStorage.getItem('userId'),
-						pageNum: 1,
-						pageSize: 20,
-					},
-					transformRequest: [
-						function(data) {
-							let ret = "";
-							for (let key in data) {
-								ret +=
-									encodeURIComponent(key) +
-									"=" +
-									encodeURIComponent(data[key]) +
-									"&";
-							}
-							return ret;
-						}
-					],
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					}
-				}).then(res => {
-					console.log(res.data)
-					let data = res.data;
-					if (data.message == '查询成功') {
-						this.goodList = data.data.list;
+				let data = {
+					userId: window.localStorage.getItem('userId'),
+					pageNum: 1,
+					pageSize: 20
+				}
+				this.$api.shopcart.findShopCart(data).then(res => {
+					console.log(res)
+					if (res.message == '查询成功') {
+						this.shopCarList = res.data.list;
+						console.log(this.shopCarList)
 					}
 				});
 			}
@@ -114,6 +92,7 @@
 	.shop-car-item {
 		width: 100%;
 		background-color: #ffffff;
+		margin-bottom: 20px;
 	}
 
 	.storeWrap,.goodWrap {

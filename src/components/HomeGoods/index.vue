@@ -45,34 +45,15 @@
 		methods: {
 			gethots() {
 				//获取首页商品推荐
-				this.$axios({
-					url: "goods/searchGoods",
-					method: "post",
-					data: {
-						flag: "recommend",
-						pageNum: 1,
-						pageSize: 20,
-						userId: this.userId
-					},
-					transformRequest: [
-						function(data) {
-							let ret = "";
-							for (let key in data) {
-								ret +=
-									encodeURIComponent(key) +
-									"=" +
-									encodeURIComponent(data[key]) +
-									"&";
-							}
-							return ret;
-						}
-					],
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					}
-				}).then(res => {
-					let data = res.data;
-					if (data.code == 200) {
+				let data = {
+					flag: "recommend",
+					pageNum: 1,
+					pageSize: 20,
+					userId: this.userId
+				}
+				this.$api.goods.searchGoods(data).then(res => {
+					console.log(res)
+					if (res.code == 200) {
 						this.recommendGoods = data.data.list;
 					}
 				});

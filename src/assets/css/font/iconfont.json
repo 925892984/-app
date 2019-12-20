@@ -174,6 +174,13 @@
       "unicode_decimal": 58945
     },
     {
+      "icon_id": "6819804",
+      "name": "乘法",
+      "font_class": "chengfa",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
       "icon_id": "7587960",
       "name": "搜索",
       "font_class": "sousuo",
@@ -186,6 +193,13 @@
       "font_class": "daishouhuo",
       "unicode": "e617",
       "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "8897318",
+      "name": "更多",
+      "font_class": "gengduo",
+      "unicode": "e671",
+      "unicode_decimal": 58993
     },
     {
       "icon_id": "10721332",

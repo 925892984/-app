@@ -1,7 +1,7 @@
 <template>
 	<div id="details">
 		<header id="header">
-			<span @click="()=>{this.$router.back()}" class="back-wrap">
+			<span @click="()=>{this.$router.push('/home')}" class="back-wrap">
 				<i class="iconfont icon-fanhui back"></i>
 			</span>
 			<h4 class="title">详情</h4>
@@ -26,38 +26,86 @@
 						<span class="money-num">{{detail.saleNum}}</span>
 					</div>
 				</div>
-				<div class="title">
+				<div class="ad-title">
 					购物不剁手 全民享分成
 					<span class="fenChengPrice">分成 ￥{{detail.goodsFenChengPrice}}</span>
 				</div>
-				<div class="detail-name">
-					<span class="redNew">新品</span>
-					{{detail.goodsTitle}}
+				<div class="detail-name-wrap">
+					<div class="detail-name">
+						<span class="redNew">新品</span>
+						{{detail.goodsTitle}}
+					</div>
 				</div>
-				<div class="express">快递: <span class="money-symbol">￥</span>{{detail.transportPrice}}</div>
-				<div class="guarantee">保障 正品保证，高额分成</div>
+				<div class="express-wrap">
+					<div class="express">快递: <span class="money-symbol">￥</span>{{detail.transportPrice}}</div>
+					<span class="iconfont icon-xiayibu detail-icon"></span>
+				</div>
+				<div class="guarantee-wrap">
+					<div class="guarantee">保障 正品保证，高额分成，急速退款，七天退换</div>
+					<span class="iconfont icon-xiayibu detail-icon"></span>
+				</div>
+			</div>
+			<div class="specification" @click.prevent="popuShow()">
+				<div class="specification-text-wrap">
+					<span class="specification-text">选择 请选择规格</span>
+				</div>
+				<span class="iconfont icon-gengduo detail-icon"></span>
 			</div>
 			<div class="detail-evaluate">
-				<div class="tab">
-					<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/detail'" class="good-detail tab-item">
-						<span>详情</span>
-					</router-link>
-					<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/evaluate'" class="good-evaluate tab-item" @click="changeTab()">
-						<span>评价</span>
-					</router-link>
+				<div class="tab-bd">
+					<div class="tab">
+						<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/detail'" class="good-detail tab-item">
+							<span>详情</span>
+						</router-link>
+						<router-link tag="div" :to="'/detail/'+this.$route.params.detail_id+'/evaluate'" class="good-evaluate tab-item"
+						@click="changeTab()">
+							<span>评价</span>
+						</router-link>
+					</div>
 				</div>
+
 				<keep-alive>
 					<router-view></router-view>
 				</keep-alive>
 			</div>
 		</div>
+		<div class="specification-detail" v-if="show">
+			<div class="specification-top">
+				<!-- <div class="detail-show"> -->
+					<div class="specificationImg">
+						<img src="../../assets/logo.png" alt="">
+					</div>
+					<div class="goodinfo">
+						<span class="money-symbol">￥</span>
+						<span class="money-num">12.8</span>
+						<div class="good-type">鼠你最美 苹果7/8</div>
+					</div>
+				<!-- </div>	 -->
+				<div class="back-radius">
+					<span class="iconfont icon-chengfa"></span>
+				</div>
+			</div>
+			<div class="good-property">
+				<div class="good-property-item">
+					<div class="item-name">
+						<span>颜色</span>
+					</div>
+					<div class="good-list">
+						<button class="good-list-item">鼠你有运</button>
+					</div>
+				</div>
+			</div>
+			<div class="specification-btn">
+				<button>确定</button>
+			</div>
+		</div>
 		<footer class="footer">
 			<div class="footer-left">
-				<div class="store">
+				<div class="store" @click.prevent="intoStore(detail.merchantId)">
 					<i class="iconfont icon icon-dianpu"></i>
 					<span class="text">店铺</span>
 				</div>
-				<div class="service">
+				<div class="service" @click.prevent="intoService()">
 					<i class="iconfont icon icon-kefu"></i>
 					<span class="text">客服</span>
 				</div>
@@ -86,45 +134,53 @@
 				detail: {},
 				goodsDetail: '',
 				goodsDetailImg: [],
-				collect: false
+				collect: false,
+				show: false
 			};
 		},
-		methods:{
-			addCollect(){	//添加收藏
-			let data = {
-				goodsId: this.$route.params.detail_id,
-				userId: window.localStorage.getItem('userId')
-			}
-				this.$http.post("/collection/addCollection",data
-				).then(res => {
+		methods: {
+			addCollect() { //添加收藏
+				let data = {
+					goodsId: this.$route.params.detail_id,
+					userId: window.localStorage.getItem('userId')
+				}
+				this.$api.collection.addCollection(data).then(res => {
 					if (res.message == "添加成功") {
 						this.collect = true
 					}
 				});
 			},
-			closeCollect(){  //只完成了表面取消收藏，还需改变真实数据
+			closeCollect() { //只完成了表面取消收藏，还需改变真实数据
 				this.collect = false
+			},
+			popuShow(){  //展示规格详情  弹出框
+				this.show = true
+			},
+			intoStore(id){//进入店铺页面
+				this.$router.push({path:'/store',query:{merchantId:id}})
+			},
+			intoService(){  //客服
+				this.$router.push('/service')
 			}
 		},
 		created() {
 			let data = {
 				goodsId: this.$route.params.detail_id,
-				userId: ""	
+				userId: ""
 			}
-			this.$http.post("goods/selectGoodsDetail",data)
-			.then(res => {
-				console.log(res)
-				if (res.message == "查询成功") {
-					this.detail = res.data
-					this.goodsDetailImg = res.data.goodsDetailImg.split(",")
-					this.goodsDetail = res.data.goodsDetail.goodsDetail;
-					if(res.data.iscollection == 0){  //商品未收藏
-						this.collect = false
-					}else{
-						this.collect = true
+			this.$api.goods.selectGoodsDetail(data)
+				.then(res => {
+					if (res.message == "查询成功") {
+						this.detail = res.data
+						this.goodsDetailImg = res.data.goodsDetailImg.split(",")
+						this.goodsDetail = res.data.goodsDetail.goodsDetail;
+						if (res.data.iscollection == 0) { //商品未收藏
+							this.collect = false
+						} else {
+							this.collect = true
+						}
 					}
-				}
-			});
+				});
 		}
 	};
 </script>
@@ -195,14 +251,32 @@
 		width: 100%;
 		background-color: #ffffff;
 	}
-
+	
+	.detail-name-wrap,
+	.express-wrap,
+	.guarantee-wrap{
+		width: 100%;
+		border-bottom: 1px solid #f7Efff;
+		height: 40px;
+		line-height: 40px;
+		position: relative;
+	}
+	
 	.detail-info .price-sales,
-	.title,
+	.ad-title,
 	.detail-name,
 	.express,
+	.specification-text-wrap,
 	.guarantee {
 		width: 95%;
 		margin: 0 auto;
+	}
+	
+	.detail-icon{
+		display: inline-block;
+		position: absolute;
+		right: 10px;
+		top: 0px;
 	}
 
 	.detail-info .price-sales {
@@ -233,11 +307,9 @@
 		color: #f30213;
 	}
 
-	.detail-info .title {
-		margin-left: 10px;
+	.detail-info .ad-title {
 		background: #999955;
 		height: 40px;
-		width: 100%;
 		line-height: 40px;
 		color: #eeeeee;
 	}
@@ -250,18 +322,10 @@
 		color: #000000;
 	}
 
-	.express,
-	.guarantee {
-		height: 40px;
-		line-height: 40px;
-		border-bottom: 1px solid #f7Efff;
-	}
-
 	.detail-name {
 		margin-top: 10px;
 		line-height: 25px;
 		font-size: 1.6rem;
-		border-bottom: 1px solid #f7Efff;
 	}
 
 	.detail-name .redNew {
@@ -318,7 +382,7 @@
 		background: #000000;
 		z-index: 2000;
 	}
-	
+
 	.detail-detail {
 		margin-top: 30px;
 		margin-bottom: 100px;
@@ -326,49 +390,50 @@
 		width: 100%;
 	}
 
-	/* .detail-title {
-		height: 40px;
-		line-height: 40px;
-		text-align: center;
-		color: #0074D9;
+	.detail-evaluate {
+		background-color: #ffffff;
+	}
+	
+	.specification{
+		margin: 20px 0;
+		width: 100%;
+		background-color: #ffffff;
+		position: relative;
+		height: 50px;
+		line-height: 50px;
+	}
+
+	.detail-evaluate .tab-bd{
 		border-bottom: 1px solid #f7Efff;
 	}
-
-	.detail-title-text {
-		display: inline-block;
-		height: 40px;
-		width: 40px;
-		border-bottom: 3px solid #0074D9;
-	} */
-
-	.detail-evaluate {
-		
-	}
-	.detail-evaluate .tab{
+	
+	.detail-evaluate .tab {
 		position: relative;
 		width: 130px;
 		margin: 0 auto;
 		height: 40px;
 		line-height: 40px;
-		
-		border-bottom: 1px solid #f7Efff;
 	}
-	.tab .tab-item{
+
+	.tab .tab-item {
 		display: inline-block;
 		position: absolute;
 		height: 40px;
 		width: 40px;
-		
+
 		text-align: center;
 	}
-	
-	.good-detail{
+
+	.good-detail {
 		left: 0;
 	}
-	.good-evaluate{
+
+	.good-evaluate {
 		right: 0;
 	}
-	.good-evaluate.router-link-active,.good-detail.router-link-active{
+
+	.good-evaluate.router-link-active,
+	.good-detail.router-link-active {
 		color: #0074D9;
 		border-bottom: 3px solid #0074D9;
 	}
@@ -451,4 +516,81 @@
 		width: 100%;
 		height: 300px;
 	}
+	
+	.specification-detail{
+		position: fixed;
+		top: 50px;
+		left: 0;
+		bottom: 50px;
+		right: 0;
+		z-index:1001;
+		background-color: #ffffff;
+	}
+	
+	.specification-top{
+		width: 100%;
+		height: 120px;
+		margin-top: 20px;
+		display: flex;
+		position: relative;
+		color: #F7EFFF;
+	}
+	
+	.detail-show{
+		
+	}
+	
+	.specificationImg{
+		margin-left: 20px;
+		height: 120px;
+		width: 120px;
+		border-radius: 5px;
+		overflow: hidden;
+	}
+	
+	.specificationImg > img{
+		width: 100%;
+		height: 100%;
+	}
+	
+	.goodinfo{
+		flex: 1;
+		margin-left: 10px;
+	}
+	
+	.good-type{
+		margin-top: 10px;
+		font-size: 1.2rem;
+		font-weight: 400;
+	}
+	
+	.back-radius{
+		position: absolute;
+		top: 0;
+		right: 15px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		overflow: hidden;
+		border: 1px solid #F7EFFF;
+	}
+	
+	.good-property{
+		margin-top: 40px;
+		width: 100%;
+	}
+	
+	.good-property-item{
+		width: 95%;
+		margin: 10px auto;
+	}
+	
+	.item-name{
+		color: #F7EFFF;
+	}
+	
+	.good-list{
+		margin: 5px 0;
+	}
+	
 </style>

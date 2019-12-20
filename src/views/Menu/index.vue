@@ -46,37 +46,17 @@
 				if (this.menuList == Menus) {
 					return
 				}
-				this.$axios({
-						url: 'goods/goodsMenu',
-						method: 'post',
-						data: {
+				let data = {
 
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Content-Type": "application/x-www-form-urlencoded"
-						}
-					})
-					.then(res => {
-						let data = res.data
-						if (data.message == "查询成功") {
-							this.menuList = data.data
-							window.localStorage.setItem('menuList', JSON.stringify(data.data))
-							this.active = data.data[0].id
-						}
-					})
+				}
+				this.$api.goods.goodsMenu(data).then(res => {
+					// let data = res.data
+					if (res.message == "查询成功") {
+						this.menuList = res.data
+						window.localStorage.setItem('menuList', JSON.stringify(res.data))
+						this.active = res.data[0].id
+					}
+				})
 			},
 			enterSearch() { //进入搜索页
 				this.$router.push('/searchGood')
@@ -85,9 +65,9 @@
 				this.menuScroll = new BScroll(this.$refs.menuList, {
 					click: true
 				})
-// 				this.mainScroll = new BScroll(this.$refs.main, {
-// 					click: true
-// 				})
+				// 				this.mainScroll = new BScroll(this.$refs.main, {
+				// 					click: true
+				// 				})
 			}
 		},
 		created() {

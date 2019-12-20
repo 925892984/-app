@@ -112,33 +112,14 @@
 				this.$router.push('/set')
 			},
 			getUserInfo() {
-				this.$axios({
-					url: "sms/getUserByUserId",
-					method: "post",
-					data: {
-						userId: window.localStorage.getItem('userId'),
-					},
-					transformRequest: [
-						function(data) {
-							let ret = "";
-							for (let key in data) {
-								ret +=
-									encodeURIComponent(key) +
-									"=" +
-									encodeURIComponent(data[key]) +
-									"&";
-							}
-							return ret;
-						}
-					],
-					headers: {
-						"Authorization": "Bearer " + window.localStorage.getItem('token')
-					}
-				}).then(res => {
+				let data = {
+					userId: window.localStorage.getItem('userId'),
+				}
+				this.$api.user.getUserByUserId(data).then(res => {
 					console.log(res)
-					let data = res.data;
-					if (data.message == "查询成功") {
-						this.userInfo = data.data;
+					// let data = res.data;
+					if (res.message == "查询成功") {
+						this.userInfo = res.data;
 					}
 				});
 			}

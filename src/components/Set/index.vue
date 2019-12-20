@@ -129,38 +129,19 @@
 				label: ''
 			};
 		},
-		created() {
-			this.$axios({
-				url: "sms/getUserByUserId",
-				method: "post",
-				data: {
-					userId: window.localStorage.getItem('userId'),
-				},
-				transformRequest: [
-					function(data) {
-						let ret = "";
-						for (let key in data) {
-							ret +=
-								encodeURIComponent(key) +
-								"=" +
-								encodeURIComponent(data[key]) +
-								"&";
-						}
-						return ret;
-					}
-				],
-				headers: {
-					"Authorization": "Bearer " + window.localStorage.getItem('token')
-				}
-			}).then(res => {
-				console.log(res)
-				let data = res.data;
-				if (data.message == "查询成功") {
-					this.userInfo = data.data;
-				}
-			});
-		},
 		methods: {
+			getUser(){
+				let data = {
+					userId: window.localStorage.getItem('userId'),
+				}
+				this.$api.user.getUserByUserId(data).then(res => {
+					console.log(res)
+					// let data = res.data;
+					if (res.message == "查询成功") {
+						this.userInfo = res.data;
+					}
+				});
+			},
 			openInputWrap(e) {
 				//作用： 修改this.label的值并显示弹出框
 				//步骤：1、找到点击的是哪一个元素
@@ -189,136 +170,60 @@
 			},
 			update() { //修改用户信息
 				if (this.label == '昵称') { //修改昵称
-					this.$axios({
-						url: "sms/updateUser ",
-						method: "post",
-						data: {
-							userId: window.localStorage.getItem('userId'),
-							userNickname: this.updateMsg
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Authorization": "Bearer " + window.localStorage.getItem('token')
-						}
-					}).then(res => {
-						let data = res.data;
-						if (data.message == "修改成功") {
+					let data = {
+						userId: window.localStorage.getItem('userId'),
+						userNickname: this.updateMsg
+					}
+					this.$api.user.updateUser(data).then(res => {
+						// let data = res.data;
+						if (res.message == "修改成功") {
 							this.popupVisible = false
 						}
 					});
 				}
 				if (this.label == '姓名') { //修改昵称
-					this.$axios({
-						url: "sms/updateUser ",
-						method: "post",
-						data: {
-							userId: window.localStorage.getItem('userId'),
-							userName: this.updateMsg
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Authorization": "Bearer " + window.localStorage.getItem('token')
-						}
-					}).then(res => {
-						let data = res.data;
-						if (data.message == "修改成功") {
+					let data = {
+						userId: window.localStorage.getItem('userId'),
+						userName: this.updateMsg
+					}
+					this.$api.user.updateUser(data).then(res => {
+						// let data = res.data;
+						if (res.message == "修改成功") {
 							this.popupVisible = false
 						}
 					});
 				}
 				if (this.label == '邮箱') { //修改昵称
-					this.$axios({
-						url: "sms/updateUser ",
-						method: "post",
-						data: {
-							userId: window.localStorage.getItem('userId'),
-							userEmail: this.updateMsg
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Authorization": "Bearer " + window.localStorage.getItem('token')
-						}
-					}).then(res => {
-						let data = res.data;
-						if (data.message == "修改成功") {
+					let data = {
+						userId: window.localStorage.getItem('userId'),
+						userEmail: this.updateMsg
+					}
+					this.$api.user.updateUser(data).then(res => {
+						// let data = res.data;
+						if (res.message == "修改成功") {
 							this.popupVisible = false
 						}
 					});
 				}
 				if (this.label == '手机') { //修改昵称
-					this.$axios({
-						url: "sms/updateUser ",
-						method: "post",
-						data: {
-							userId: window.localStorage.getItem('userId'),
-							userPhone: this.updateMsg
-						},
-						transformRequest: [
-							function(data) {
-								let ret = "";
-								for (let key in data) {
-									ret +=
-										encodeURIComponent(key) +
-										"=" +
-										encodeURIComponent(data[key]) +
-										"&";
-								}
-								return ret;
-							}
-						],
-						headers: {
-							"Authorization": "Bearer " + window.localStorage.getItem('token')
-						}
-					}).then(res => {
+					let data = {
+						userId: window.localStorage.getItem('userId'),
+						userPhone: this.updateMsg
+					}
+					this.$api.user.updateUser(data).then(res => {
 						let data = res.data;
 						if (data.message == "修改成功") {
 							this.popupVisible = false
-						}else{
+						} else {
 							alert(data.message)
 						}
 					});
 				}
 			},
-			changePassword(){   //修改密码
+			changePassword() { //修改密码
 				this.$router.push('/changePassWord')
 			},
-			intoAddress(){   //地址管理
+			intoAddress() { //地址管理
 				this.$router.push('/adminAddress')
 			},
 			outLogin() {
@@ -326,6 +231,9 @@
 				window.localStorage.setItem('userId', null)
 				window.location.href = 'http://localhost:8080/login'
 			}
+		},
+		created() {
+			this.getUser()
 		}
 	};
 </script>

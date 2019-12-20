@@ -10,6 +10,7 @@ export default new Vuex.Store({
 		goodList: [],
 		searchMsg: '',
 		menuTitle: '',
+		menuId: '',
 		order: false,
 		tooken: window.localStorage.getItem('token') || null
 	},
@@ -19,6 +20,9 @@ export default new Vuex.Store({
 		},
 		getMenuTitle(state) {
 			return state.menuTitle
+		},
+		getMenuId(state) {
+			return state.menuId
 		}
 	},
 	mutations: {
@@ -27,11 +31,17 @@ export default new Vuex.Store({
 		},
 		setMenuTitle(state, str) {
 			state.menuTitle = str
+		},
+		setMenuId(state, str) {
+			state.menuId = str
 		}
 	},
 	actions: {
 		setMenuTitleFun(store,str){
 			store.commit('setMenuTitle',str)
+		},
+		setMenuIdFun(store,str){
+			store.commit('setMenuId',str)
 		}
 	},
 	modules: {

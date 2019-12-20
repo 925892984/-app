@@ -41,59 +41,37 @@
 			return {
 				order: this.$store.state.order,
 				active: {},
-				
+
 			}
 		},
 		methods: {
 			changeOrder() {
-				// 				let icon = document.querySelectorAll('.icon')
-				// 				icon.className = 'iconfont icon-shengxu icon'
-				// 				console.log(icon)
-			},
-			showIcon() {
-// 				let item = document.querySelectorAll('.good-sort-item')
-// 				let active = document.querySelectorAll('.router-link-active')
-// 				let node = ''
-// 				for (let currentValue of item) {
-// 					for (let value of active) {
-// 						if (currentValue == value) {
-// 							node = currentValue
-// 						}
-// 					}
-// 				}
-// 				let span = document.createElement('span')
-// 				let i = document.createElement('i')
-// 				i.className = 'iconfont icon-jiangxu icon'
-// 				span.appendChild(i)
-// 				node.children[0].appendChild(span)
-
 				let icon = document.querySelectorAll('.icon')
 				let list = []
 				for (let item of icon) {
-					// console.log(item)
 					console.log(item.parentNode.parentNode.className)
-					if(item.parentNode.parentNode.className !== 'good-sort-item router-link-exact-active router-link-active'){
+					if (item.parentNode.parentNode.className !== 'good-sort-item router-link-exact-active router-link-active') {
 						list.push(item)
-					}else{
+					} else {
 						this.active = item
 					}
 				}
 				for (let item of list) {
 					item.style.display = 'none'
 				}
-				this.active.style.display = 'inline-block'	
+				this.active.style.display = 'inline-block'
 			}
 		},
 		mounted() {
-						this.$nextTick(()=>{
-							this.showIcon()
-						})	
+			this.$nextTick(() => {
+				
+			})
 		},
 		updated() {
 			// this.$router.go(0)
 		},
-		watch:{
-			active(newVal){
+		watch: {
+			active(newVal) {
 				newVal.style.display = 'inline-block'
 				console.log(newVal)
 			}

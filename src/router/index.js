@@ -122,6 +122,12 @@ const routes = [
 	},{
 		path: '/newAdderss',
 		component: ()=> import('@/components/AdminAddress/newAddress.vue')
+	},{
+		path: '/store',
+		component: ()=> import('@/components/Store')
+	},{
+		path: '/service',
+		component: ()=> import('@/components/Store')
 	},
 	{
 		path: '/*',

@@ -31,7 +31,7 @@ const order = {
 	//发起退款
 	launchRefundInfo (params) {
 		return http.post('refundInfo/launchRefundInfo',params)
-	}
+	},
 	//文件上传 
 	upload (params) {
 		return http.post('file/upload',params)
@@ -45,20 +45,20 @@ const order = {
 		return http.post('orderPay/cancelPay',params)
 	},
 	//退货单号查询 
-	findRefundInfo (params) {
+	getfindRefundInfo (params) { //findRefundInfo接口相同
 		return http.post('refundInfo/findRefundInfo/1/10',params)
 	},
 	//购物车订单结算、查看订单详情
 	orderInitialize (params) {
 		return http.post('order/orderInitialize',params)
-	}
+	},
 	//根据（小订单号）orderPayNo 查询订单信息 
 	findOrderPayByOrderPayNo (params) {
 		return http.post('orderPay/findOrderPayByOrderPayNo',params)
 	},
 	//订单查询-手机端  
 	findOrderPay (params) {
-		return http.post('orderPay/findOrderPay')
+		return http.post('orderPay/findOrderPay',params)
 	},
 	//订单查询-管理端
 	findOrderPayBrowser (params) {
@@ -74,7 +74,7 @@ const order = {
 	},
 	//修改订单的收货地址  
 	updateOrderPayAddressId (params) {
-		return http.post('orderPay/updateOrderPayAddressId')
+		return http.post('orderPay/updateOrderPayAddressId',params)
 	},
 	//售后商品查询
 	findOrderGoods (params) {
@@ -90,7 +90,7 @@ const order = {
 	},
 	//商家管理系统查看退款详情  
 	findRefundInfo (params) {
-		return http.post('refundInfo/findRefundInfo/1/10')
+		return http.post('refundInfo/findRefundInfo/1/10',params)
 	},
 	//商家金额统计（余额管理）
 	sumOrderMerchantByMerchantId (params) {
@@ -110,7 +110,7 @@ const order = {
 	},
 	//平台查看订单统计总览  
 	findAllOrderPayTotal (params) {
-		return http.post('orderGoods/findAllOrderPayTotal')
+		return http.post('orderGoods/findAllOrderPayTotal',params)
 	},
 	//商家提现审批
 	merchantWithdrawApprover (params) {

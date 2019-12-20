@@ -43,7 +43,8 @@
 		name: 'GoodsEvaluate',
 		data() {
 			return {
-				evaluate: {}
+				evaluate: {},
+				
 			}
 		},
 		methods: {
@@ -52,63 +53,47 @@
 				let currentWidth = num / 100 * parentWidth
 				node.style.width = currentWidth + 'px'
 			},
-			setProgressBar(){//设置进度条
-				let score =	document.querySelectorAll('.score')
+			setProgressBar() { //设置进度条
+				let score = document.querySelectorAll('.score')
 				let fills = document.querySelectorAll('.fill')
 				let arrScore = Object.values(score)
 				let arrNodes = Object.values(fills) //将对象转换成数组
-				console.log(arrScore)
-				arrNodes.forEach((item,index)=>{
-					if(index == 0){
-						this.info(item,this.evaluate.HighlyRecommended)
+				arrNodes.forEach((item, index) => {
+					if (index == 0) {
+						this.info(item, this.evaluate.HighlyRecommended)
 						arrScore[0].innerText = this.evaluate.HighlyRecommended + '%'
-					}else if(index == 1){
-						this.info(item,this.evaluate.VerySatisfied)
+					} else if (index == 1) {
+						this.info(item, this.evaluate.VerySatisfied)
 						arrScore[1].innerText = this.evaluate.VerySatisfied + '%'
-					}else if(index == 2){
-						this.info(item,this.evaluate.ValueMoney)
+					} else if (index == 2) {
+						this.info(item, this.evaluate.ValueMoney)
 						arrScore[2].innerText = this.evaluate.ValueMoney + '%'
-					}else if(index == 3){
-						this.info(item,this.evaluate.GeneralFeeling)
+					} else if (index == 3) {
+						this.info(item, this.evaluate.GeneralFeeling)
 						arrScore[3].innerText = this.evaluate.GeneralFeeling + '%'
-					}else {
-						this.info(item,this.evaluate.JustPassable)
+					} else {
+						this.info(item, this.evaluate.JustPassable)
 						arrScore[4].innerText = this.evaluate.JustPassable + '%'
 					}
-				}) 
+				})
+			},
+			getEvaluate(){  //获取Evaluate()  评价数据
+				var data = {
+					goodsId: this.$route.params.detail_id,
+					userId: ""
+				}
+				this.$api.goods.selectGoodsDetail(data)
+				.then(res => {
+					if (res.message == "查询成功") {
+						this.evaluate = res.data.goodsDetail.evaluate;
+						this.setProgressBar()
+					}
+				});
+				
 			}
 		},
 		created() {
-			this.$axios({
-				url: "goods/selectGoodsDetail",
-				method: "post",
-				data: {
-					goodsId: this.$route.params.detail_id,
-					userId: ""
-				},
-				transformRequest: [
-					function(data) {
-						let ret = "";
-						for (let key in data) {
-							ret +=
-								encodeURIComponent(key) +
-								"=" +
-								encodeURIComponent(data[key]) +
-								"&";
-						}
-						return ret;
-					}
-				],
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				}
-			}).then(res => {
-				let data = res.data;
-				if (data.message == "查询成功") {
-					this.evaluate = data.data.goodsDetail.evaluate;
-					this.setProgressBar()
-				}
-			});
+			this.getEvaluate()
 		}
 	}
 </script>
@@ -149,7 +134,7 @@
 		line-height: 10px;
 		overflow: hidden;
 	}
-	
+
 	.progress-bar .fill {
 		display: inline-block;
 		height: 10px;

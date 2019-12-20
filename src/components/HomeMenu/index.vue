@@ -1,49 +1,49 @@
 <template>
 	<div id="home-menu">
 		<div class="menuWrap" @click.prevent="setMenuTitle($event)">
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="41,35">
 				<div class="item-img">
 					<img src="@/assets/image/01.png" alt class="imgItem"/>
 				</div>
 				<p class="menuText">特色美食</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="1,71">
 				<div class="item-img">
 					<img src="@/assets/image/02.png" alt class="imgItem"/>
 				</div>
 				<p class="menuText">居家百货</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="saleHot">
 				<div class="item-img">
-					<img src="@/assets/image/04.png" alt class="imgItem" />
+					<img src="@/assets/image/04.png" alt class="imgItem"/>
 				</div>
 				<p class="menuText">热门爆款</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="100,112">
 				<div class="item-img">
 					<img src="@/assets/image/05.png" alt class="imgItem" />
 				</div>
 				<p class="menuText">数码电器</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="31,52">
 				<div class="item-img">
 					<img src="@/assets/image/03.png" alt class="imgItem" />
 				</div>
 				<p class="menuText">服装穿戴</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="108">
 				<div class="item-img">
 					<img src="@/assets/image/07.png" alt class="imgItem" />
 				</div>
 				<p class="menuText">美妆护肤</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="131">
 				<div class="item-img">
 					<img src="@/assets/image/10.png" alt class="imgItem" />
 				</div>
 				<p class="menuText">免费送</p>
 			</router-link>
-			<router-link to="/homeMenu" tag="div" class="mentItem" >
+			<router-link to="/homeMenu" tag="div" class="mentItem" data-id="recommendNew">
 				<div class="item-img">
 					<img src="@/assets/image/06.png" alt class="imgItem" />
 				</div>
@@ -62,12 +62,18 @@
 				if(e.target.className == 'mentItem'){
 					// console.log(e.target.children[1].innerText)
 					this.$store.dispatch('setMenuTitleFun',e.target.children[1].innerText)
+					this.$store.dispatch('setMenuIdFun',e.target.getAttribute('data-id'))
+					// console.log(e.target.getAttribute('data-id'))
 				}else if(e.target.className == 'imgItem'){
 					// console.log(e.target.parentNode.nextSibling.innerText)
 					this.$store.dispatch('setMenuTitleFun',e.target.parentNode.nextSibling.innerText)
+					this.$store.dispatch('setMenuIdFun',e.target.parentNode.parentNode.getAttribute('data-id'))
+					// console.log(e.target.parentNode.parentNode.getAttribute('data-id'))
 				}else{
 					// console.log(e.target.innerText)
 					this.$store.dispatch('setMenuTitleFun',e.target.innerText)
+					this.$store.dispatch('setMenuIdFun',e.target.parentNode.getAttribute('data-id'))
+					// console.log(e.target.parentNode.getAttribute('data-id'))
 				}
 			}
 		}

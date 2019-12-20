@@ -43,32 +43,38 @@ export default {
       if(this.userPhone){
         if(this.userPassword){
           if(/^1[3|4|5|7|8][0-9]{9}$/.test(this.userPhone)){
-            this.$axios({
-              url:'api/login',
-              method: 'post',
-              data:{"userPhone":this.userPhone,"userPassword":this.userPassword,"signinType":"from"},
-              transformRequest: [
-                        function(data) {
-                          let ret = "";
-                          for (let key in data) {
-                            ret +=
-                              encodeURIComponent(key) +
-                              "=" +
-                              encodeURIComponent(data[key]) +
-                              "&";
-                          }
-                          return ret;
-                        }
-                      ],
-                      headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                      }
-            })
+//             this.$axios({
+//               url:'api/login',
+//               method: 'post',
+//               data:{"userPhone":this.userPhone,"userPassword":this.userPassword,"signinType":"from"},
+//               transformRequest: [
+//                         function(data) {
+//                           let ret = "";
+//                           for (let key in data) {
+//                             ret +=
+//                               encodeURIComponent(key) +
+//                               "=" +
+//                               encodeURIComponent(data[key]) +
+//                               "&";
+//                           }
+//                           return ret;
+//                         }
+//                       ],
+//                       headers: {
+//                         "Content-Type": "application/x-www-form-urlencoded"
+//                       }
+//             })
+						let data = {
+							"userPhone":this.userPhone,
+							"userPassword":this.userPassword,
+							"signinType":"from",
+						}
+						this.$api.user.login(data)
             .then(res=>{
-              let data = res.data;
-              if(data.message == "登录成功"){
-								window.localStorage.setItem('token',data.data.userInfo.token)
-								window.localStorage.setItem('userId',data.data.userInfo.userId)
+              // let data = res.data;
+              if(res.message == "登录成功"){
+								window.localStorage.setItem('token',res.data.userInfo.token)
+								window.localStorage.setItem('userId',res.data.userInfo.userId)
                 window.location.href = 'http://localhost:8080/home'
               }
             })

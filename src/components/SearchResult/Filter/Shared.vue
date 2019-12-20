@@ -7,7 +7,7 @@
 	import GoodList from '@/components/GoodList'
 	export default {
 		name: 'Shared',
-		data(){
+		data() {
 			return {
 				goodList: []
 			}
@@ -17,37 +17,18 @@
 		},
 		methods: {
 			getShared() {
-				this.$axios({
-					url: "goods/searchGoods",
-					method: "post",
-					data: {
-						flag: "homeSearch",
-						pageNum: 1,
-						pageSize: 20,
-						orderType : 'desc',
-						orderField : 'goodsFenChengPrice',
-						other: this.$store.state.searchMsg
-					},
-					transformRequest: [
-						function(data) {
-							let ret = "";
-							for (let key in data) {
-								ret +=
-									encodeURIComponent(key) +
-									"=" +
-									encodeURIComponent(data[key]) +
-									"&";
-							}
-							return ret;
-						}
-					],
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					}
-				}).then(res => {
-					let data = res.data;
-					if (data.message == '查询成功') {
-						this.goodList = data.data.list;
+				let data = {
+					flag: "homeSearch",
+					pageNum: 1,
+					pageSize: 20,
+					orderType: 'desc',
+					orderField: 'goodsFenChengPrice',
+					other: this.$store.state.searchMsg
+				}
+				this.$api.goods.searchGoods(data).then(res => {
+					// let data = res.data;
+					if (res.message == '查询成功') {
+						this.goodList = res.data.list;
 					}
 				});
 			}

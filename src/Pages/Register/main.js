@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Register from './App.vue'
-import axios from 'axios'
+import http from '@/JS/http.js'
+import api from '@/JS/api'
 
 // 引入Mint-UI全部组件
 import Mint from 'mint-ui'
@@ -13,11 +14,8 @@ import '@/assets/css/reset.css'
 //字体文件
 import '@/assets/css/font/iconfont.css'
 
-//设置axios
-const getBaseUrl = process.env.VUE_APP_URL
-axios.defaults.baseURL = getBaseUrl
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-Vue.prototype.$axios = axios
+Vue.prototype.$http = http 
+Vue.prototype.$api = api;
 
 Vue.config.productionTip = false
 
