@@ -2,7 +2,7 @@
 	<div class="menu-list-item" ref="itemWrap">
 		<div class="secondMenuWrap">
 			<div class="menu-item-wrap">
-				<div class="menu-item" v-for="item in menuListItem" :key="item.id">
+				<div class="menu-item" v-for="item in menuListItem" :key="item.id" @click="intoMenu(item.id)">
 					<div class="itemImg-Wrap">
 						<img :src="item.img" alt="">
 					</div>
@@ -64,6 +64,18 @@
 					if (res.message == "查询成功") {
 						this.menuGoods = res.data.goods.list
 					}
+				})
+			},
+			intoMenu(id){
+				let data = {
+					pageNum: 1,
+					pageSize: 20,
+					pid: this.$route.params.pid,
+					cid: id,
+				}
+				this.$api.goods.getGoods(data)
+				.then(res=>{
+					console.log(res)
 				})
 			}
 		},

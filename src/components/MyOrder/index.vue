@@ -1,17 +1,20 @@
 <template>
 	<div id="myOrder">
 		<header id="header">
-			<router-link to="/home" class="back-wrap">
+			<span to="/" class="back-wrap" @click="()=>{this.$router.push('/mine')}">
 				<i class="iconfont icon-fanhui back"></i>
-			</router-link>
+			</span>
 			<h4 class="title">我的订单</h4>
 		</header>
-		<div class="order-menu">
-			<router-link to="/myOrder/all" tag="div" class="order-item">全部</router-link>
-			<router-link to="/myOrder/awaitPay" tag="div" class="order-item">待付款</router-link>
-			<router-link to="/myOrder/awaitGoods" tag="div" class="order-item">待发货</router-link>
-			<router-link to="/myOrder/awaitTakeGoods" tag="div" class="order-item">待收货</router-link>
+		<div>
+			<div class="order-menu">
+				<router-link to="/myOrder/all" tag="div" class="order-item">全部</router-link>
+				<router-link to="/myOrder/awaitPay" tag="div" class="order-item">待付款</router-link>
+				<router-link to="/myOrder/awaitGoods" tag="div" class="order-item">待发货</router-link>
+				<router-link to="/myOrder/awaitTakeGoods" tag="div" class="order-item">待收货</router-link>
+			</div>
 		</div>
+		<router-view></router-view>
 	</div>
 </template>
 
@@ -20,10 +23,9 @@
 		name: "MyOrder",
 		data() {
 			return {
-
+				
 			};
 		}
-
 	};
 </script>
 

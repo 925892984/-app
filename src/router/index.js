@@ -77,19 +77,19 @@ const routes = [
 		children: [
 			{
 				path: 'all',
-				component: ()=> import('@/components/MyOrder/index.vue')
+				component: ()=> import('@/components/MyOrder/All')
 			},
 			{
 				path: 'awaitPay',
-				component: ()=> import('@/components/MyOrder/index.vue')
+				component: ()=> import('@/components/MyOrder/AwaitPay')
 			},
 			{
 				path: 'awaitGoods',
-				component: ()=> import('@/components/MyOrder/index.vue')
+				component: ()=> import('@/components/MyOrder/AwaitGoods')
 			},
 			{
 				path: 'awaitTakeGoods',
-				component: ()=> import('@/components/MyOrder/index.vue')
+				component: ()=> import('@/components/MyOrder/WaitTakeGoods')
 			}
 		]
 	},{

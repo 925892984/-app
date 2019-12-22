@@ -42,18 +42,22 @@
 				<router-link class="commodityBox-item" tag="div" to="/myOrder/awaitPay">
 					<div class="commodityBox-item-icon iconfont icon-daifukuan"></div>
 					<div class="text">待付款</div>
+					<span class="commodityBox-num" v-show="userInfo.notPayCount == 0?false:true">{{userInfo.notPayCount}}</span>
 				</router-link>
 				<router-link class="commodityBox-item" tag="div" to="/myOrder/awaitGoods">
 					<div class="commodityBox-item-icon iconfont icon-daifahuo"></div>
 					<div class="text">待发货</div>
+					<span class="commodityBox-num" v-show="userInfo.notDeliverCount == 0?false:true">{{userInfo.notDeliverCount}}</span>
 				</router-link>
 				<router-link class="commodityBox-item" tag="div" to="/myOrder/awaitTakeGoods">
 					<div class="commodityBox-item-icon iconfont icon-daishouhuo"></div>
 					<div class="text">待收货</div>
+					<span class="commodityBox-num" v-show="userInfo.notTakeOverCount == 0?false:true">{{userInfo.notTakeOverCount}}</span>
 				</router-link>
 				<div class="commodityBox-item">
 					<div class="commodityBox-item-icon iconfont icon-tuikuan"></div>
 					<div class="text">退款/售后</div>
+					<!-- <span class="commodityBox-num"></span> -->
 				</div>
 			<!-- <my-order></my-order> -->
 			</div>
@@ -65,12 +69,12 @@
 				<div class="fencheng myWallet-item">
 					<span class="fencheng-icon iconfont icon-qian"></span>
 					<p class="myWallet-text">分成总额</p>
-					<span class="moneyNum">￥{{userInfo.divideInto}}</span>
+					<span class="moneyNum">￥{{fencheng.sumDivideInto}}</span>
 				</div>
 				<div class="balance myWallet-item">
 					<span class="balance-icon iconfont icon-yue"></span>
 					<p class="myWallet-text">余额</p>
-					<span class="moneyNum">￥{{userInfo.surplusPrice}}</span>
+					<span class="moneyNum">￥{{fencheng.surplusPrice}}</span>
 				</div>
 			</div>
 			<div class="remind">
@@ -98,7 +102,8 @@
 		name: 'Mine',
 		data() {
 			return {
-				userInfo: {}
+				userInfo: {},
+				fencheng: {}
 			}
 		},
 		components: {
@@ -111,21 +116,41 @@
 			set() {
 				this.$router.push('/set')
 			},
-			getUserInfo() {
-				let data = {
-					userId: window.localStorage.getItem('userId'),
-				}
-				this.$api.user.getUserByUserId(data).then(res => {
+// 			getUserInfo() {
+// 				let data = {
+// 					userId: window.localStorage.getItem('userId'),
+// 				}
+// 				this.$api.user.getUserByUserId(data).then(res => {
+// 					console.log(res)
+// 					// let data = res.data;
+// 					if (res.message == "查询成功") {
+// 						this.userInfo = res.data;
+// 					}
+// 				});
+// 			},
+			findOrderBubbleByUserId(){  //个人中心气泡查询
+				this.$api.order.findOrderBubbleByUserId()
+				.then(res=>{
 					console.log(res)
-					// let data = res.data;
-					if (res.message == "查询成功") {
-						this.userInfo = res.data;
+					if(res.message == '查询成功'){
+						this.userInfo = res.data
 					}
-				});
+				})
+			},
+			sumOrderDivideIntoByUserId(){  //个人分成统计
+				this.$api.order.sumOrderDivideIntoByUserId()
+				.then(res=>{
+					console.log(res)
+					if(res.message == '查询成功'){
+						this.fencheng = res.data
+					}
+				})
 			}
 		},
 		created() {
-			this.getUserInfo()
+			// this.getUserInfo()
+			this.findOrderBubbleByUserId()
+			this.sumOrderDivideIntoByUserId()
 		}
 
 	}
@@ -247,6 +272,7 @@
 	.commodityBox-item {
 		width: 20%;
 		text-align: center;
+		position: relative;
 	}
 
 	.commodityBox-item-icon {
@@ -260,7 +286,19 @@
 		font-size: 2.0rem;
 		color: #ffffff;
 	}
-
+	
+	.commodityBox-num{
+		position: absolute;
+		top: 0;
+		right: 5px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background-color: red;
+		color: #ffffff;
+		line-height: 20px;
+		text-align: center;
+	}
 	.commodityBox-item .text {
 		margin-top: 5px;
 		font-size: 1.2rem;

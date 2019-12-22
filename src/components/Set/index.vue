@@ -1,9 +1,9 @@
 <template>
 	<div id="set">
 		<header id="header">
-			<router-link to="/home" class="back-wrap">
+			<span to="/" class="back-wrap" @click="()=>{this.$router.go(-1)}">
 				<i class="iconfont icon-fanhui back"></i>
-			</router-link>
+			</span>
 			<h4 class="title">账户管理</h4>
 		</header>
 		<div class="main">
