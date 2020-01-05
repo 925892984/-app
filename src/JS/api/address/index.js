@@ -11,7 +11,7 @@ const address = {
 	},
 	//修改收货地址 
 	editaddress (params) {
-		return http.post('collection/editaddress',params)
+		return http.post('address/editaddress',params)
 	},
 	//删除收货地址 
 	deladdress  (params) {

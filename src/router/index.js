@@ -123,11 +123,17 @@ const routes = [
 		path: '/newAdderss',
 		component: ()=> import('@/components/AdminAddress/newAddress.vue')
 	},{
+		path: '/editAddress',
+		component: ()=> import('@/components/AdminAddress/editAddress.vue')
+	},{
 		path: '/store',
 		component: ()=> import('@/components/Store')
 	},{
 		path: '/service',
 		component: ()=> import('@/components/Store')
+	},{
+		path: '/collection',
+		component: ()=> import('@/components/MyHistory')
 	},
 	{
 		path: '/*',

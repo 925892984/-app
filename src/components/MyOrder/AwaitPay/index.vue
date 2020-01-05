@@ -78,7 +78,6 @@
 					console.log(res)
 					if(res.message == "查询成功"){
 						this.awaitPayList = res.data.list
-						console.log(res.data.list[0].goods)
 					}
 				})
 			}

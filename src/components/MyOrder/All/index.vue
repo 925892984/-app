@@ -12,7 +12,7 @@
 						</span>
 					</div>
 					<div class="order-title">
-						<span class="await-pay-text">待付款</span>
+						<span class="await-pay-text">已取消</span>
 					</div>
 				</div>
 				<div class="good-wrap" v-for="good in item.mapList" :key="good.goodsId">
@@ -71,14 +71,13 @@
 				let data = {
 					pageNum: 1,
 					pageSize: 10,
-					ostatus: 2
+					ostatus: 5
 				}
 				this.$api.order.findOrderPay(data)
 				.then(res=>{
 					console.log(res)
 					if(res.message == "查询成功"){
 						this.awaitPayList = res.data.list
-						console.log(res.data.list[0].goods)
 					}
 				})
 			}

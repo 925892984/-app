@@ -14,17 +14,17 @@
 						<span class="user-tel">{{item.phone}}</span>
 					</div>
 					<div class="detail-address">
-						<span>{{item.address}}</span>
+						<span>{{item.address.district}} {{item.address.street}}</span>
 					</div>
 				</div>
 				<div class="handle">
 					<div class="handel-left">
-						<input type="radio" class="radio-inp" :data-radio="item.is_default">
+						<input type="radio" name="addresss" class="radio-inp" 
+						:data-radio="item.is_default">
 						<span>默认地址</span>
 					</div>
-
 					<div class="handel-right">
-						<div class="edit-address-wrap">
+						<div class="edit-address-wrap" @click="editAddress(item.name,item.phone,item.address,item.add_id)">
 							<span class="iconfont icon-bianji address-icon"></span>
 							<span class="edit">编辑</span>
 						</div>
@@ -52,7 +52,8 @@
 		name: 'AdminAddress',
 		data(){
 			return {
-				addressList: []
+				addressList: [],
+				address: {}
 			}
 		},
 		methods:{
@@ -68,10 +69,12 @@
 					console.log(res)
 					if(res.message == "查询成功"){
 						this.addressList = res.data.result
+						setTimeout(()=>{
+							this.initRadio()
+						},1)
 						this.addressList.forEach(item=>{
-							if(item.is_default == 1){ //保存默认地址
-								window.localStorage.setItem('address',item.add_id)
-							}
+							item.address = JSON.parse(item.address)
+							console.log(item.address)
 						})
 					}
 					
@@ -79,20 +82,24 @@
 			},
 			initRadio(){ //初始化默认地址
 				let radios = document.querySelectorAll('.radio-inp')
-				console.log(radios)
 				radios.forEach(item=>{
 					if(item.getAttribute('data-radio') == 1){  //是否为默认地址
 						item.setAttribute('checked','true')
 					}
-					console.log(item.getAttribute('data-radio'))
 				})
+			},
+			editAddress(name,phone,address,addId){
+				this.$router.push({path:'/editAddress',query:{
+					name:name,
+					phone:phone,
+					address:address,
+					addId: addId
+				}})
+				
 			}
 		},
 		created() {
 			this.getAddressList()
-			this.$nextTick(()=>{
-				this.initRadio()
-			})
 		}
 	}
 </script>
@@ -224,9 +231,14 @@
 		font-weight: 400;
 		color: #666666;
 	}
+	
 	.handel-left{
 		flex: 1;
 		margin-left: 10px;
+	}
+	.radio-inp{
+		display: inline-block;
+		margin-right: 10px;
 	}
 	.handel-right{
 		width: 120px;

@@ -20,10 +20,14 @@
 					</div>
 				</div>
 				<div class="user-record">
-					<div class="myCollect-wrap user-record-item">
+<!-- 					<div class="myCollect-wrap user-record-item">
 						<div class="number">{{userInfo.collectionCount}}</div>
 						<div class="my-text">我的收藏</div>
-					</div>
+					</div> -->
+					<router-link tag="div" to="/collection" class="myCollect-wrap user-record-item">
+						<div class="number">{{userInfo.collectionCount}}</div>
+						<div class="my-text">我的收藏</div>
+					</router-link>
 					<div class="myAttention-wrap user-record-item">
 						<div class="number">{{userInfo.attentionCount}}</div>
 						<div class="my-text">我的关注</div>

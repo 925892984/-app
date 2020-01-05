@@ -1,6 +1,6 @@
 <template>
 	<div id="goodsList">
-		<div class="good-wrap" v-for="(item,index) in goodList" :key="index">
+		<div class="good-wrap" v-for="(item,index) in goodList" :key="index" @click="intoGood(item.goodsId)">
 			<div class="img-wrap">
 				<img :src="item.goodsImg" alt="">
 			</div>
@@ -35,6 +35,11 @@
 		name: "GoodsList",
 		props: {
 			goodList: Array
+		},
+		methods:{
+			intoGood(goodId){
+				this.$router.push('/detail/'+goodId)
+			}
 		}
 	};
 </script>

@@ -48,7 +48,6 @@
 					<span class="need-to-pay">需支付：</span>
 					<span class="pay-num">￥{{payMoney}}</span>
 					<button class="pay-btn" @click.prevent="closeAccount()">结算</button>
-					
 				</div>
 			</div>
 		</div>

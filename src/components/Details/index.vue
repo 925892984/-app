@@ -1,7 +1,7 @@
 <template>
 	<div id="details">
 		<header id="header">
-			<span @click="()=>{this.$router.push('/home')}" class="back-wrap">
+			<span @click="()=>{this.$router.back()}" class="back-wrap">
 				<i class="iconfont icon-fanhui back"></i>
 			</span>
 			<h4 class="title">详情</h4>
